@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirana Voice Ledger</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-voice {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-voice:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-warning {
+            background-color: #eab308;
+            color: black;
+        }
+
+        .btn-warning:hover {
+            background-color: #ca8a04;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-secondary {
+            background-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background-color: #9ca3af;
+        }
+
+        /* Main Content */
+        main {
+            padding: 24px 0;
+        }
+
+        /* Customer Grid */
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .customer-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .customer-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .customer-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .customer-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-weight: 600;
+        }
+
+        .balance-line {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .balance-positive {
+            color: #10b981;
+        }
+
+        .balance-negative {
+            color: #ef4444;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 25px rgba(0,0,0,0.15);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+        }
+
+        /* Detail Page */
+        .detail-page {
+            display: none;
+        }
+
+        .detail-page.active {
+            display: block;
+        }
+
+        .back-button {
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .back-button:hover {
+            color: #2563eb;
+        }
+
+        .detail-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            margin: -24px -16px 24px -16px;
+            padding: 24px 16px;
+        }
+
+        .customer-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .customer-notes {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .edit-button {
+            color: #3b82f6;
+            font-size: 14px;
+            margin-top: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .edit-button:hover {
+            color: #2563eb;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .balance-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .balance-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .breakdown-item {
+            opacity: 0.9;
+        }
+
+        .breakdown-label {
+            opacity: 0.7;
+        }
+
+        .breakdown-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            animation: slideIn 0.3s ease;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .transaction-date {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .transaction-type {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .transaction-debit {
+            color: #ef4444;
+        }
+
+        .transaction-payment {
+            color: #10b981;
+        }
+
+        .transaction-delete {
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 18px;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+
+        .transaction-delete:hover {
+            opacity: 0.7;
+        }
+
+        .empty-message {
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .payment-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .payment-form input {
+            flex: 1;
+        }
+
+        .payment-form button {
+            flex-shrink: 0;
+        }
+
+        .danger-zone {
+            border-top: 1px solid #fecaca;
+            padding-top: 20px;
+        }
+
+        .danger-zone button {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .danger-zone button:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Voice Input Styles */
+        .listening-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .voice-hint {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .parsed-result {
+            background-color: #dcfce7;
+            border: 2px solid #10b981;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .parsed-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+        .parsed-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .parsed-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .parsed-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .button-group {
+                width: 100%;
+            }
+
+            .button-group button {
+                flex: 1;
+            }
+
+            .customers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .balance-amount {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>🏪 Kirana Ledger</h1>
+                <div class="button-group">
+                    <button class="btn-voice" id="voiceBtn">🎤 Voice Input</button>
+                    <button class="btn-primary" id="addCustomerBtn">➕ Add Customer</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+            <div id="customersContainer" class="customers-grid"></div>
+        </div>
+
+        <!-- Detail View -->
+        <div id="detailView" class="detail-page">
+            <button class="back-button" id="backBtn">← Back to Dashboard</button>
+            
+            <div class="detail-header">
+                <div id="detailCustomerTitle" class="customer-title"></div>
+                <div id="detailCustomerNotes" class="customer-notes"></div>
+                <button id="editCustomerBtn" class="edit-button">Edit</button>
+            </div>
+
+            <div id="detailBalanceCard" class="balance-card"></div>
+
+            <div class="section">
+                <div class="section-title">Add Payment</div>
+                <form id="paymentForm" class="payment-form">
+                    <input type="number" id="paymentAmount" placeholder="Amount (₹)" min="1" step="1" required>
+                    <button type="submit" class="btn-success">Save Payment</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Transactions</div>
+                <div id="transactionsContainer"></div>
+            </div>
+
+            <div class="section danger-zone">
+                <button class="btn-warning" id="archiveBtn">Archive Customer</button>
+                <button class="btn-danger" id="deleteBtn">Delete Customer</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Customer Modal -->
+    <div id="addCustomerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Add New Customer</div>
+            <form id="addCustomerForm">
+                <div class="form-group">
+                    <label class="form-label">Customer Name *</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes (optional)</label>
+                    <textarea id="customerNotes"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">Add Customer</button>
+                    <button type="button" class="btn-secondary" id="closeAddModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Voice Input Modal -->
+    <div id="voiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Voice Input</div>
+            <div id="voiceContent"></div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title" id="confirmTitle"></div>
+            <p id="confirmMessage" style="margin-bottom: 24px; color: #6b7280;"></p>
+            <div class="modal-buttons">
+                <button type="button" class="btn-danger" id="confirmYes">Delete</button>
+                <button type="button" class="btn-secondary" id="confirmNo">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div id="editCustomerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Edit Customer</div>
+            <form id="editCustomerForm">
+                <div class="form-group">
+                    <label class="form-label">Customer Name *</label>
+                    <input type="text" id="editCustomerName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea id="editCustomerNotes"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <button type="button" class="btn-secondary" id="closeEditModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ==================== DATA MANAGEMENT ====================
+        const DataManager = {
+            getCustomers() {
+                return JSON.parse(localStorage.getItem('kirana_customers') || '[]');
+            },
+
+            saveCustomers(customers) {
+                localStorage.setItem('kirana_customers', JSON.stringify(customers));
+            },
+
+            getTransactions() {
+                return JSON.parse(localStorage.getItem('kirana_transactions') || '[]');
+            },
+
+            saveTransactions(transactions) {
+                localStorage.setItem('kirana_transactions', JSON.stringify(transactions));
+            },
+
+            addCustomer(name, notes = '') {
+                const customers = this.getCustomers();
+                const newCustomer = {
+                    id: Date.now(),
+                    name: name.trim(),
+                    notes: notes.trim(),
+                    status: 'active',
+                    created_at: new Date().toISOString()
+                };
+                customers.push(newCustomer);
+                this.saveCustomers(customers);
+                return newCustomer;
+            },
+
+            updateCustomer(id, name, notes) {
+                const customers = this.getCustomers();
+                const customer = customers.find(c => c.id === id);
+                if (customer) {
+                    customer.name = name.trim();
+                    customer.notes = notes.trim();
+                    this.saveCustomers(customers);
+                }
+                return customer;
+            },
+
+            deleteCustomer(id) {
+                const customers = this.getCustomers();
+                const filtered = customers.filter(c => c.id !== id);
+                this.saveCustomers(filtered);
+
+                const transactions = this.getTransactions();
+                const updatedTransactions = transactions.filter(t => t.customer_id !== id);
+                this.saveTransactions(updatedTransactions);
+            },
+
+            archiveCustomer(id) {
+                const customers = this.getCustomers();
+                const customer = customers.find(c => c.id === id);
+                if (customer) {
+                    customer.status = 'archived';
+                    this.saveCustomers(customers);
+                }
+            },
+
+            addTransaction(customerId, amount, type) {
+                const transactions = this.getTransactions();
+                const newTransaction = {
+                    id: Date.now(),
+                    customer_id: customerId,
+                    amount: parseFloat(amount),
+                    type: type,
+                    date: new Date().toISOString()
+                };
+                transactions.push(newTransaction);
+                this.saveTransactions(transactions);
+                return newTransaction;
+            },
+
+            deleteTransaction(transactionId) {
+                const transactions = this.getTransactions();
+                const filtered = transactions.filter(t => t.id !== transactionId);
+                this.saveTransactions(filtered);
+            },
+
+            getCustomerBalance(customerId) {
+                const transactions = this.getTransactions();
+                const customerTransactions = transactions.filter(t => t.customer_id === customerId);
+
+                let totalDebit = 0;
+                let totalPayment = 0;
+
+                customerTransactions.forEach(t => {
+                    if (t.type === 'debit') {
+                        totalDebit += t.amount;
+                    } else if (t.type === 'payment') {
+                        totalPayment += t.amount;
+                    }
+                });
+
+                return {
+                    totalDebit,
+                    totalPayment,
+                    balance: totalDebit - totalPayment
+                };
+            },
+
+            getCustomerTransactions(customerId) {
+                const transactions = this.getTransactions();
+                return transactions
+                    .filter(t => t.customer_id === customerId)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+            }
+        };
+
+        // ==================== VOICE PARSER ====================
+        const VoiceParser = {
+            parse(input) {
+                const trimmed = input.trim();
+                const parts = trimmed.split(/\s+/);
+
+                if (parts.length < 2) {
+                    return { error: 'Please say customer name and amount. Example: "Ramesh 20"' };
+                }
+
+                const amount = parts[parts.length - 1];
+                const name = parts.slice(0, -1).join(' ');
+
+                const numAmount = parseFloat(amount);
+                if (isNaN(numAmount) || numAmount <= 0) {
+                    return { error: 'Amount must be a valid number' };
+                }
+
+                return {
+                    name: name.trim(),
+                    amount: numAmount,
+                    error: null
+                };
+            }
+        };
+
+        // ==================== UI MANAGEMENT ====================
+        class UIManager {
+            constructor() {
+                this.currentCustomerId = null;
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                document.getElementById('addCustomerBtn').addEventListener('click', () => this.showAddCustomerModal());
+                document.getElementById('voiceBtn').addEventListener('click', () => this.showVoiceModal());
+                document.getElementById('closeAddModal').addEventListener('click', () => this.closeModal('addCustomerModal'));
+                document.getElementById('addCustomerForm').addEventListener('submit', (e) => this.handleAddCustomer(e));
+                document.getElementById('backBtn').addEventListener('click', () => this.showDashboard());
+                document.getElementById('paymentForm').addEventListener('submit', (e) => this.handlePayment(e));
+                document.getElementById('archiveBtn').addEventListener('click', () => this.showArchiveConfirm());
+                document.getElementById('deleteBtn').addEventListener('click', () => this.showDeleteConfirm());
+                document.getElementById('editCustomerBtn').addEventListener('click', () => this.showEditCustomerModal());
+                document.getElementById('closeEditModal').addEventListener('click', () => this.closeModal('editCustomerModal'));
+                document.getElementById('editCustomerForm').addEventListener('submit', (e) => this.handleEditCustomer(e));
+                document.getElementById('confirmNo').addEventListener('click', () => this.closeModal('confirmModal'));
+            }
+
+            showModal(modalId) {
+                document.getElementById(modalId).classList.add('active');
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
+            }
+
+            showAddCustomerModal() {
+                document.getElementById('customerName').value = '';
+                document.getElementById('customerNotes').value = '';
+                this.showModal('addCustomerModal');
+                document.getElementById('customerName').focus();
+            }
+
+            handleAddCustomer(e) {
+                e.preventDefault();
+                const name = document.getElementById('customerName').value;
+                const notes = document.getElementById('customerNotes').value;
+
+                if (!name.trim()) {
+                    alert('Please enter customer name');
+                    return;
+                }
+
+                DataManager.addCustomer(name, notes);
+                this.closeModal('addCustomerModal');
+                this.renderDashboard();
+            }
+
+            showVoiceModal() {
+                this.closeModal('addCustomerModal');
+                const voiceContent = document.getElementById('voiceContent');
+                voiceContent.innerHTML = `
+                    <div class="voice-hint">Say: "Customer Name Amount" (e.g., "Ramesh 100")</div>
+                    <div class="form-group">
+                        <label class="form-label">Or type here:</label>
+                        <input type="text" id="voiceInput" placeholder="e.g., Ramesh 100" autofocus>
+                    </div>
+                    <div id="voiceStatus"></div>
+                    <div id="voiceParsed"></div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-primary" id="parseBtn">Parse</button>
+                        <button type="button" class="btn-secondary" id="closeVoiceModal">Cancel</button>
+                    </div>
+                `;
+
+                this.showModal('voiceModal');
+
+                document.getElementById('parseBtn').addEventListener('click', () => this.parseVoiceInput());
+                document.getElementById('closeVoiceModal').addEventListener('click', () => this.closeModal('voiceModal'));
+                document.getElementById('voiceInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.parseVoiceInput();
+                });
+
+                this.startVoiceRecognition();
+            }
+
+            startVoiceRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626;">Voice input not supported in this browser</p>';
+                    return;
+                }
+
+                const recognition = new SpeechRecognition();
+                recognition.language = 'en-IN';
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                document.getElementById('voiceStatus').innerHTML = '<p style="color: #2563eb;"><span class="listening-indicator"></span>Listening...</p>';
+
+                recognition.onresult = (event) => {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    document.getElementById('voiceInput').value = transcript.trim();
+                    document.getElementById('voiceStatus').innerHTML = '';
+                    this.parseVoiceInput();
+                };
+
+                recognition.onerror = (event) => {
+                    document.getElementById('voiceStatus').innerHTML = `<p style="color: #dc2626;">Error: ${event.error}</p>`;
+                };
+
+                recognition.start();
+            }
+
+            parseVoiceInput() {
+                const input = document.getElementById('voiceInput').value;
+                const result = VoiceParser.parse(input);
+
+                if (result.error) {
+                    document.getElementById('voiceParsed').innerHTML = `<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px; margin-top: 16px;">${result.error}</p>`;
+                    return;
+                }
+
+                const customers = DataManager.getCustomers();
+                const existing = customers.find(c => c.name.toLowerCase() === result.name.toLowerCase());
+
+                document.getElementById('voiceParsed').innerHTML = `
+                    <div class="parsed-result">
+                        <div class="parsed-label">Confirm transaction:</div>
+                        <div class="parsed-content">
+                            <div class="parsed-name">${result.name}</div>
+                            <div class="parsed-amount">₹${result.amount}</div>
+                        </div>
+                    </div>
+                `;
+
+                const parseButton = document.getElementById('parseBtn');
+                parseButton.textContent = 'Confirm';
+                parseButton.className = 'btn-success';
+
+                parseButton.onclick = () => this.confirmVoiceTransaction(result, existing);
+            }
+
+            confirmVoiceTransaction(parsed, existingCustomer) {
+                let customerId = existingCustomer?.id;
+
+                if (!customerId) {
+                    const confirmed = window.confirm(`Customer "${parsed.name}" doesn't exist. Create new customer?`);
+                    if (!confirmed) return;
+
+                    const newCustomer = DataManager.addCustomer(parsed.name, '');
+                    customerId = newCustomer.id;
+                }
+
+                DataManager.addTransaction(customerId, parsed.amount, 'debit');
+                this.closeModal('voiceModal');
+                alert(`✓ Added ₹${parsed.amount} debit for ${parsed.name}`);
+                this.renderDashboard();
+            }
+
+            showDashboard() {
+                this.currentCustomerId = null;
+                document.getElementById('dashboardView').style.display = 'block';
+                document.getElementById('detailView').classList.remove('active');
+                this.renderDashboard();
+            }
+
+            renderDashboard() {
+                const customers = DataManager.getCustomers().filter(c => c.status === 'active');
+                const container = document.getElementById('customersContainer');
+
+                if (customers.length === 0) {
+                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 48px 24px;">No customers yet. Add one to get started!</p>';
+                    return;
+                }
+
+                container.innerHTML = customers.map(customer => {
+                    const { balance, totalDebit, totalPayment } = DataManager.getCustomerBalance(customer.id);
+                    const balanceClass = balance > 0 ? 'balance-negative' : 'balance-positive';
+
+                    return `
+                        <div class="customer-card" onclick="app.showCustomerDetail(${customer.id})">
+                            <div class="customer-name">${customer.name}</div>
+                            <div class="customer-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Debit:</span>
+                                    <span class="stat-value">₹${totalDebit}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Paid:</span>
+                                    <span class="stat-value">₹${totalPayment}</span>
+                                </div>
+                                <div class="stat-item balance-line">
+                                    <span class="stat-label">Balance:</span>
+                                    <span class="stat-value ${balanceClass}">₹${balance}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            showCustomerDetail(customerId) {
+                this.currentCustomerId = customerId;
+                document.getElementById('dashboardView').style.display = 'none';
+                document.getElementById('detailView').classList.add('active');
+                this.renderCustomerDetail();
+            }
+
+            renderCustomerDetail() {
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                if (!customer) return;
+
+                document.getElementById('detailCustomerTitle').textContent = customer.name;
+                document.getElementById('detailCustomerNotes').textContent = customer.notes || '';
+
+                const { balance, totalDebit, totalPayment } = DataManager.getCustomerBalance(customer.id);
+                const cardClass = balance > 5000 ? 'warning' : '';
+
+                document.getElementById('detailBalanceCard').innerHTML = `
+                    <div class="balance-label">Current Balance</div>
+                    <div class="balance-amount">₹${balance}</div>
+                    <div class="balance-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Debit</div>
+                            <div class="breakdown-value">₹${totalDebit}</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Paid</div>
+                            <div class="breakdown-value">₹${totalPayment}</div>
+                        </div>
+                    </div>
+                `;
+
+                if (balance > 5000) {
+                    document.getElementById('detailBalanceCard').className = 'balance-card warning';
+                }
+
+                const transactions = DataManager.getCustomerTransactions(customer.id);
+                const container = document.getElementById('transactionsContainer');
+
+                if (transactions.length === 0) {
+                    container.innerHTML = '<div class="empty-message">No transactions yet</div>';
+                    return;
+                }
+
+                container.innerHTML = transactions.map(t => {
+                    const date = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                    const typeLabel = t.type === 'debit' ? 'Debit' : 'Payment';
+                    const typeClass = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
+                    const sign = t.type === 'debit' ? '+' : '-';
+
+                    return `
+                        <div class="transaction-item">
+                            <div>
+                                <div class="transaction-date">${date}</div>
+                                <div class="transaction-type">${typeLabel}</div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="transaction-amount ${typeClass}">${sign}₹${t.amount}</div>
+                                <button class="transaction-delete" onclick="app.confirmDeleteTransaction(${t.id})">❌</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            handlePayment(e) {
+                e.preventDefault();
+                const amount = parseFloat(document.getElementById('paymentAmount').value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    alert('Please enter a valid amount');
+                    return;
+                }
+
+                const { balance } = DataManager.getCustomerBalance(this.currentCustomerId);
+
+                if (amount > balance) {
+                    alert(`Cannot add payment more than outstanding balance of ₹${balance}`);
+                    return;
+                }
+
+                DataManager.addTransaction(this.currentCustomerId, amount, 'payment');
+                document.getElementById('paymentAmount').value = '';
+                this.renderCustomerDetail();
+            }
+
+            showArchiveConfirm() {
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                document.getElementById('confirmTitle').textContent = 'Archive Customer?';
+                document.getElementById('confirmMessage').textContent = `${customer.name} will be hidden from the dashboard.`;
+                document.getElementById('confirmYes').textContent = 'Archive';
+                document.getElementById('confirmYes').className = 'btn-warning';
+                document.getElementById('confirmYes').onclick = () => this.archiveCustomer();
+
+                this.showModal('confirmModal');
+            }
+
+            archiveCustomer() {
+                DataManager.archiveCustomer(this.currentCustomerId);
+                this.closeModal('confirmModal');
+                this.showDashboard();
+            }
+
+            showDeleteConfirm() {
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                document.getElementById('confirmTitle').textContent = 'Delete Customer?';
+                document.getElementById('confirmMessage').textContent = `Are you sure you want to delete ${customer.name}? This will delete all transactions.`;
+                document.getElementById('confirmYes').textContent = 'Delete';
+                document.getElementById('confirmYes').className = 'btn-danger';
+                document.getElementById('confirmYes').onclick = () => this.deleteCustomer();
+
+                this.showModal('confirmModal');
+            }
+
+            deleteCustomer() {
+                DataManager.deleteCustomer(this.currentCustomerId);
+                this.closeModal('confirmModal');
+                this.showDashboard();
+            }
+
+            showEditCustomerModal() {
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                document.getElementById('editCustomerName').value = customer.name;
+                document.getElementById('editCustomerNotes').value = customer.notes;
+                this.showModal('editCustomerModal');
+                document.getElementById('editCustomerName').focus();
+            }
+
+            handleEditCustomer(e) {
+                e.preventDefault();
+                const name = document.getElementById('editCustomerName').value;
+                const notes = document.getElementById('editCustomerNotes').value;
+
+                if (!name.trim()) {
+                    alert('Customer name cannot be empty');
+                    return;
+                }
+
+                DataManager.updateCustomer(this.currentCustomerId, name, notes);
+                this.closeModal('editCustomerModal');
+                this.renderCustomerDetail();
+            }
+
+            confirmDeleteTransaction(transactionId) {
+                document.getElementById('confirmTitle').textContent = 'Delete Transaction?';
+                document.getElementById('confirmMessage').textContent = 'Are you sure you want to delete this transaction?';
+                document.getElementById('confirmYes').textContent = 'Delete';
+                document.getElementById('confirmYes').className = 'btn-danger';
+                document.getElementById('confirmYes').onclick = () => this.deleteTransaction(transactionId);
+
+                this.showModal('confirmModal');
+            }
+
+            deleteTransaction(transactionId) {
+                DataManager.deleteTransaction(transactionId);
+                this.closeModal('confirmModal');
+                this.renderCustomerDetail();
+            }
+        }
+
+        // ==================== INITIALIZE ====================
+        const app = new UIManager();
+        app.renderDashboard();
+    </script>
+</body>
+</html>
