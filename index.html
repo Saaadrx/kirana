@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirana Voice Ledger - Shared</title>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
+    <title>Kirana Voice Ledger</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: #f3f4f6;
             color: #1f2937;
         }
@@ -116,10 +114,12 @@
             background-color: #9ca3af;
         }
 
+        /* Main Content */
         main {
             padding: 24px 0;
         }
 
+        /* Customer Grid */
         .customers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -183,6 +183,7 @@
             color: #ef4444;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -257,6 +258,7 @@
             flex: 1;
         }
 
+        /* Detail Page */
         .detail-page {
             display: none;
         }
@@ -308,6 +310,10 @@
             padding: 0;
         }
 
+        .edit-button:hover {
+            color: #2563eb;
+        }
+
         .balance-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -337,6 +343,14 @@
             gap: 16px;
             margin-top: 16px;
             font-size: 14px;
+        }
+
+        .breakdown-item {
+            opacity: 0.9;
+        }
+
+        .breakdown-label {
+            opacity: 0.7;
         }
 
         .breakdown-value {
@@ -416,6 +430,10 @@
             padding: 4px 8px;
         }
 
+        .transaction-delete:hover {
+            opacity: 0.7;
+        }
+
         .empty-message {
             color: #6b7280;
             font-size: 14px;
@@ -446,6 +464,11 @@
             margin-bottom: 12px;
         }
 
+        .danger-zone button:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Voice Input Styles */
         .listening-indicator {
             display: inline-block;
             width: 12px;
@@ -473,30 +496,16 @@
 
         .parsed-result {
             background-color: #dcfce7;
-            border: 3px solid #10b981;
-            border-radius: 8px;
-            padding: 20px;
+            border: 2px solid #10b981;
+            border-radius: 6px;
+            padding: 16px;
             margin-bottom: 16px;
-            animation: popIn 0.4s ease;
-        }
-
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
 
         .parsed-label {
             font-size: 12px;
             color: #6b7280;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            font-weight: 600;
+            margin-bottom: 4px;
         }
 
         .parsed-content {
@@ -506,29 +515,14 @@
         }
 
         .parsed-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
 
         .parsed-amount {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #10b981;
-        }
-
-        .sync-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background-color: #10b981;
-            border-radius: 50%;
-            margin-left: 8px;
-            animation: pulse 1s infinite;
-        }
-
-        .sync-indicator.syncing {
-            animation: none;
-            background-color: #f59e0b;
         }
 
         @media (max-width: 768px) {
@@ -552,6 +546,10 @@
             h1 {
                 font-size: 24px;
             }
+
+            .balance-amount {
+                font-size: 28px;
+            }
         }
     </style>
 </head>
@@ -559,7 +557,7 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <h1>🏪 Kirana Ledger <span class="sync-indicator"></span></h1>
+                <h1>🏪 Kirana Ledger</h1>
                 <div class="button-group">
                     <button class="btn-voice" id="voiceBtn">🎤 Voice Input</button>
                     <button class="btn-primary" id="addCustomerBtn">➕ Add Customer</button>
@@ -669,118 +667,115 @@
     </div>
 
     <script>
-        // ==================== FIREBASE SETUP ====================
-        const firebaseConfig = {
-            apiKey: "AIzaSyD_12345_PLACEHOLDER",
-            authDomain: "kirana-ledger.firebaseapp.com",
-            projectId: "kirana-ledger",
-            databaseURL: "https://kirana-ledger-default-rtdb.asia-southeast1.firebasedatabase.app",
-            storageBucket: "kirana-ledger.appspot.com"
-        };
-
-        let db = null;
-        let isFirebaseReady = false;
-
-        // Initialize Firebase - Using a public database
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.database();
-        isFirebaseReady = true;
-
         // ==================== DATA MANAGEMENT ====================
         const DataManager = {
-            getCustomers(callback) {
-                db.ref('customers').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    const customers = data ? Object.values(data) : [];
-                    callback(customers.filter(c => c.status === 'active'));
-                });
+            getCustomers() {
+                return JSON.parse(localStorage.getItem('kirana_customers') || '[]');
             },
 
-            getAllCustomers(callback) {
-                db.ref('customers').once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    const customers = data ? Object.values(data) : [];
-                    callback(customers);
-                });
+            saveCustomers(customers) {
+                localStorage.setItem('kirana_customers', JSON.stringify(customers));
+            },
+
+            getTransactions() {
+                return JSON.parse(localStorage.getItem('kirana_transactions') || '[]');
+            },
+
+            saveTransactions(transactions) {
+                localStorage.setItem('kirana_transactions', JSON.stringify(transactions));
             },
 
             addCustomer(name, notes = '') {
-                const id = Date.now().toString();
-                db.ref('customers/' + id).set({
-                    id: id,
+                const customers = this.getCustomers();
+                const newCustomer = {
+                    id: Date.now(),
                     name: name.trim(),
                     notes: notes.trim(),
                     status: 'active',
                     created_at: new Date().toISOString()
-                });
+                };
+                customers.push(newCustomer);
+                this.saveCustomers(customers);
+                return newCustomer;
             },
 
             updateCustomer(id, name, notes) {
-                db.ref('customers/' + id).update({
-                    name: name.trim(),
-                    notes: notes.trim()
-                });
+                const customers = this.getCustomers();
+                const customer = customers.find(c => c.id === id);
+                if (customer) {
+                    customer.name = name.trim();
+                    customer.notes = notes.trim();
+                    this.saveCustomers(customers);
+                }
+                return customer;
             },
 
             deleteCustomer(id) {
-                db.ref('customers/' + id).remove();
-                db.ref('transactions').orderByChild('customer_id').equalTo(id).once('value', (snapshot) => {
-                    snapshot.forEach((child) => {
-                        child.ref.remove();
-                    });
-                });
+                const customers = this.getCustomers();
+                const filtered = customers.filter(c => c.id !== id);
+                this.saveCustomers(filtered);
+
+                const transactions = this.getTransactions();
+                const updatedTransactions = transactions.filter(t => t.customer_id !== id);
+                this.saveTransactions(updatedTransactions);
             },
 
             archiveCustomer(id) {
-                db.ref('customers/' + id).update({ status: 'archived' });
+                const customers = this.getCustomers();
+                const customer = customers.find(c => c.id === id);
+                if (customer) {
+                    customer.status = 'archived';
+                    this.saveCustomers(customers);
+                }
             },
 
             addTransaction(customerId, amount, type) {
-                const id = Date.now().toString();
-                db.ref('transactions/' + id).set({
-                    id: id,
+                const transactions = this.getTransactions();
+                const newTransaction = {
+                    id: Date.now(),
                     customer_id: customerId,
                     amount: parseFloat(amount),
                     type: type,
                     date: new Date().toISOString()
-                });
+                };
+                transactions.push(newTransaction);
+                this.saveTransactions(transactions);
+                return newTransaction;
             },
 
             deleteTransaction(transactionId) {
-                db.ref('transactions/' + transactionId).remove();
+                const transactions = this.getTransactions();
+                const filtered = transactions.filter(t => t.id !== transactionId);
+                this.saveTransactions(filtered);
             },
 
-            getCustomerBalance(customerId, callback) {
-                db.ref('transactions').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    const transactions = data ? Object.values(data).filter(t => t.customer_id === customerId) : [];
+            getCustomerBalance(customerId) {
+                const transactions = this.getTransactions();
+                const customerTransactions = transactions.filter(t => t.customer_id === customerId);
 
-                    let totalDebit = 0;
-                    let totalPayment = 0;
+                let totalDebit = 0;
+                let totalPayment = 0;
 
-                    transactions.forEach(t => {
-                        if (t.type === 'debit') {
-                            totalDebit += t.amount;
-                        } else if (t.type === 'payment') {
-                            totalPayment += t.amount;
-                        }
-                    });
-
-                    callback({
-                        totalDebit,
-                        totalPayment,
-                        balance: totalDebit - totalPayment
-                    });
+                customerTransactions.forEach(t => {
+                    if (t.type === 'debit') {
+                        totalDebit += t.amount;
+                    } else if (t.type === 'payment') {
+                        totalPayment += t.amount;
+                    }
                 });
+
+                return {
+                    totalDebit,
+                    totalPayment,
+                    balance: totalDebit - totalPayment
+                };
             },
 
-            getCustomerTransactions(customerId, callback) {
-                db.ref('transactions').on('value', (snapshot) => {
-                    const data = snapshot.val();
-                    const transactions = data ? Object.values(data).filter(t => t.customer_id === customerId) : [];
-                    const sorted = transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    callback(sorted);
-                });
+            getCustomerTransactions(customerId) {
+                const transactions = this.getTransactions();
+                return transactions
+                    .filter(t => t.customer_id === customerId)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
             }
         };
 
@@ -859,6 +854,7 @@
 
                 DataManager.addCustomer(name, notes);
                 this.closeModal('addCustomerModal');
+                this.renderDashboard();
             }
 
             showVoiceModal() {
@@ -866,15 +862,25 @@
                 const voiceContent = document.getElementById('voiceContent');
                 voiceContent.innerHTML = `
                     <div class="voice-hint">Say: "Customer Name Amount" (e.g., "Ramesh 100")</div>
+                    <div class="form-group">
+                        <label class="form-label">Or type here:</label>
+                        <input type="text" id="voiceInput" placeholder="e.g., Ramesh 100" autofocus>
+                    </div>
                     <div id="voiceStatus"></div>
                     <div id="voiceParsed"></div>
                     <div class="modal-buttons">
-                        <button type="button" class="btn-secondary" id="closeVoiceModal">Close</button>
+                        <button type="button" class="btn-primary" id="parseBtn">Parse</button>
+                        <button type="button" class="btn-secondary" id="closeVoiceModal">Cancel</button>
                     </div>
                 `;
 
                 this.showModal('voiceModal');
+
+                document.getElementById('parseBtn').addEventListener('click', () => this.parseVoiceInput());
                 document.getElementById('closeVoiceModal').addEventListener('click', () => this.closeModal('voiceModal'));
+                document.getElementById('voiceInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.parseVoiceInput();
+                });
 
                 this.startVoiceRecognition();
             }
@@ -882,44 +888,36 @@
             startVoiceRecognition() {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 if (!SpeechRecognition) {
-                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px;">Voice not supported in this browser. Please use Chrome, Edge, or Safari.</p>';
+                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626;">Voice input not supported in this browser</p>';
                     return;
                 }
 
                 const recognition = new SpeechRecognition();
                 recognition.language = 'en-IN';
-                recognition.continuous = true;
+                recognition.continuous = false;
                 recognition.interimResults = false;
 
-                document.getElementById('voiceStatus').innerHTML = '<p style="color: #2563eb; padding: 12px;"><span class="listening-indicator"></span>Listening...</p>';
+                document.getElementById('voiceStatus').innerHTML = '<p style="color: #2563eb;"><span class="listening-indicator"></span>Listening...</p>';
 
                 recognition.onresult = (event) => {
                     let transcript = '';
                     for (let i = event.resultIndex; i < event.results.length; i++) {
-                        if (event.results[i].isFinal) {
-                            transcript += event.results[i][0].transcript;
-                        }
+                        transcript += event.results[i][0].transcript;
                     }
-
-                    if (transcript.trim()) {
-                        this.parseVoiceInput(transcript.trim());
-                    }
+                    document.getElementById('voiceInput').value = transcript.trim();
+                    document.getElementById('voiceStatus').innerHTML = '';
+                    this.parseVoiceInput();
                 };
 
                 recognition.onerror = (event) => {
-                    document.getElementById('voiceStatus').innerHTML = `<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px;">Error: ${event.error}</p>`;
-                };
-
-                recognition.onend = () => {
-                    setTimeout(() => {
-                        recognition.start();
-                    }, 100);
+                    document.getElementById('voiceStatus').innerHTML = `<p style="color: #dc2626;">Error: ${event.error}</p>`;
                 };
 
                 recognition.start();
             }
 
-            parseVoiceInput(input) {
+            parseVoiceInput() {
+                const input = document.getElementById('voiceInput').value;
                 const result = VoiceParser.parse(input);
 
                 if (result.error) {
@@ -927,9 +925,9 @@
                     return;
                 }
 
-                document.getElementById('voiceStatus').innerHTML = '';
+                const customers = DataManager.getCustomers();
+                const existing = customers.find(c => c.name.toLowerCase() === result.name.toLowerCase());
 
-                // Show in green with YES/NO
                 document.getElementById('voiceParsed').innerHTML = `
                     <div class="parsed-result">
                         <div class="parsed-label">Confirm transaction:</div>
@@ -938,42 +936,30 @@
                             <div class="parsed-amount">₹${result.amount}</div>
                         </div>
                     </div>
-                    <div class="modal-buttons">
-                        <button type="button" class="btn-success" id="confirmVoiceYes">✓ YES</button>
-                        <button type="button" class="btn-secondary" id="confirmVoiceNo">✗ NO</button>
-                    </div>
                 `;
 
-                document.getElementById('confirmVoiceYes').addEventListener('click', () => this.confirmVoiceTransaction(result));
-                document.getElementById('confirmVoiceNo').addEventListener('click', () => {
-                    document.getElementById('voiceParsed').innerHTML = '';
-                });
+                const parseButton = document.getElementById('parseBtn');
+                parseButton.textContent = 'Confirm';
+                parseButton.className = 'btn-success';
+
+                parseButton.onclick = () => this.confirmVoiceTransaction(result, existing);
             }
 
-            confirmVoiceTransaction(parsed) {
-                DataManager.getAllCustomers((customers) => {
-                    let customerId = customers.find(c => c.name.toLowerCase() === parsed.name.toLowerCase())?.id;
+            confirmVoiceTransaction(parsed, existingCustomer) {
+                let customerId = existingCustomer?.id;
 
-                    if (!customerId) {
-                        const confirmed = window.confirm(`Customer "${parsed.name}" doesn't exist. Create new customer?`);
-                        if (!confirmed) return;
+                if (!customerId) {
+                    const confirmed = window.confirm(`Customer "${parsed.name}" doesn't exist. Create new customer?`);
+                    if (!confirmed) return;
 
-                        customerId = Date.now().toString();
-                        DataManager.addCustomer(parsed.name, '');
-                        setTimeout(() => {
-                            DataManager.addTransaction(customerId, parsed.amount, 'debit');
-                        }, 500);
-                    } else {
-                        DataManager.addTransaction(customerId, parsed.amount, 'debit');
-                    }
+                    const newCustomer = DataManager.addCustomer(parsed.name, '');
+                    customerId = newCustomer.id;
+                }
 
-                    // Clear voice result
-                    document.getElementById('voiceParsed').innerHTML = '<p style="color: #10b981; padding: 12px; background: #dcfce7; border-radius: 6px; margin-top: 16px;">✓ Added ₹' + parsed.amount + ' for ' + parsed.name + '</p>';
-
-                    setTimeout(() => {
-                        document.getElementById('voiceParsed').innerHTML = '';
-                    }, 2000);
-                });
+                DataManager.addTransaction(customerId, parsed.amount, 'debit');
+                this.closeModal('voiceModal');
+                alert(`✓ Added ₹${parsed.amount} debit for ${parsed.name}`);
+                this.renderDashboard();
             }
 
             showDashboard() {
@@ -984,59 +970,38 @@
             }
 
             renderDashboard() {
-                DataManager.getCustomers((customers) => {
-                    const container = document.getElementById('customersContainer');
+                const customers = DataManager.getCustomers().filter(c => c.status === 'active');
+                const container = document.getElementById('customersContainer');
 
-                    if (customers.length === 0) {
-                        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 48px 24px;">No customers yet. Add one to get started!</p>';
-                        return;
-                    }
+                if (customers.length === 0) {
+                    container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 48px 24px;">No customers yet. Add one to get started!</p>';
+                    return;
+                }
 
-                    container.innerHTML = customers.map(customer => {
-                        // Get balance synchronously for display
-                        let balanceInfo = { balance: 0, totalDebit: 0, totalPayment: 0 };
+                container.innerHTML = customers.map(customer => {
+                    const { balance, totalDebit, totalPayment } = DataManager.getCustomerBalance(customer.id);
+                    const balanceClass = balance > 0 ? 'balance-negative' : 'balance-positive';
 
-                        DataManager.getCustomerBalance(customer.id, (info) => {
-                            balanceInfo = info;
-                            this.updateCustomerCardDisplay(customer.id, info);
-                        });
-
-                        const balanceClass = balanceInfo.balance > 0 ? 'balance-negative' : 'balance-positive';
-
-                        return `
-                            <div class="customer-card" id="card-${customer.id}" onclick="app.showCustomerDetail('${customer.id}')">
-                                <div class="customer-name">${customer.name}</div>
-                                <div class="customer-stats">
-                                    <div class="stat-item">
-                                        <span class="stat-label">Debit:</span>
-                                        <span class="stat-value" id="debit-${customer.id}">₹${balanceInfo.totalDebit}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Paid:</span>
-                                        <span class="stat-value" id="paid-${customer.id}">₹${balanceInfo.totalPayment}</span>
-                                    </div>
-                                    <div class="stat-item balance-line">
-                                        <span class="stat-label">Balance:</span>
-                                        <span class="stat-value ${balanceClass}" id="balance-${customer.id}">₹${balanceInfo.balance}</span>
-                                    </div>
+                    return `
+                        <div class="customer-card" onclick="app.showCustomerDetail(${customer.id})">
+                            <div class="customer-name">${customer.name}</div>
+                            <div class="customer-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">Debit:</span>
+                                    <span class="stat-value">₹${totalDebit}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Paid:</span>
+                                    <span class="stat-value">₹${totalPayment}</span>
+                                </div>
+                                <div class="stat-item balance-line">
+                                    <span class="stat-label">Balance:</span>
+                                    <span class="stat-value ${balanceClass}">₹${balance}</span>
                                 </div>
                             </div>
-                        `;
-                    }).join('');
-                });
-            }
-
-            updateCustomerCardDisplay(customerId, info) {
-                const debitEl = document.getElementById(`debit-${customerId}`);
-                const paidEl = document.getElementById(`paid-${customerId}`);
-                const balanceEl = document.getElementById(`balance-${customerId}`);
-
-                if (debitEl) debitEl.textContent = `₹${info.totalDebit}`;
-                if (paidEl) paidEl.textContent = `₹${info.totalPayment}`;
-                if (balanceEl) {
-                    balanceEl.textContent = `₹${info.balance}`;
-                    balanceEl.className = `stat-value ${info.balance > 0 ? 'balance-negative' : 'balance-positive'}`;
-                }
+                        </div>
+                    `;
+                }).join('');
             }
 
             showCustomerDetail(customerId) {
@@ -1047,64 +1012,63 @@
             }
 
             renderCustomerDetail() {
-                DataManager.getAllCustomers((customers) => {
-                    const customer = customers.find(c => c.id === this.currentCustomerId);
-                    if (!customer) return;
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
 
-                    document.getElementById('detailCustomerTitle').textContent = customer.name;
-                    document.getElementById('detailCustomerNotes').textContent = customer.notes || '';
+                if (!customer) return;
 
-                    DataManager.getCustomerBalance(customer.id, (balance) => {
-                        const cardClass = balance.balance > 5000 ? 'warning' : '';
-                        document.getElementById('detailBalanceCard').innerHTML = `
-                            <div class="balance-label">Current Balance</div>
-                            <div class="balance-amount">₹${balance.balance}</div>
-                            <div class="balance-breakdown">
-                                <div>
-                                    <div class="breakdown-label">Total Debit</div>
-                                    <div class="breakdown-value">₹${balance.totalDebit}</div>
-                                </div>
-                                <div>
-                                    <div class="breakdown-label">Total Paid</div>
-                                    <div class="breakdown-value">₹${balance.totalPayment}</div>
-                                </div>
+                document.getElementById('detailCustomerTitle').textContent = customer.name;
+                document.getElementById('detailCustomerNotes').textContent = customer.notes || '';
+
+                const { balance, totalDebit, totalPayment } = DataManager.getCustomerBalance(customer.id);
+                const cardClass = balance > 5000 ? 'warning' : '';
+
+                document.getElementById('detailBalanceCard').innerHTML = `
+                    <div class="balance-label">Current Balance</div>
+                    <div class="balance-amount">₹${balance}</div>
+                    <div class="balance-breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Debit</div>
+                            <div class="breakdown-value">₹${totalDebit}</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Paid</div>
+                            <div class="breakdown-value">₹${totalPayment}</div>
+                        </div>
+                    </div>
+                `;
+
+                if (balance > 5000) {
+                    document.getElementById('detailBalanceCard').className = 'balance-card warning';
+                }
+
+                const transactions = DataManager.getCustomerTransactions(customer.id);
+                const container = document.getElementById('transactionsContainer');
+
+                if (transactions.length === 0) {
+                    container.innerHTML = '<div class="empty-message">No transactions yet</div>';
+                    return;
+                }
+
+                container.innerHTML = transactions.map(t => {
+                    const date = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+                    const typeLabel = t.type === 'debit' ? 'Debit' : 'Payment';
+                    const typeClass = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
+                    const sign = t.type === 'debit' ? '+' : '-';
+
+                    return `
+                        <div class="transaction-item">
+                            <div>
+                                <div class="transaction-date">${date}</div>
+                                <div class="transaction-type">${typeLabel}</div>
                             </div>
-                        `;
-
-                        if (cardClass) {
-                            document.getElementById('detailBalanceCard').className = 'balance-card ' + cardClass;
-                        }
-                    });
-
-                    DataManager.getCustomerTransactions(customer.id, (transactions) => {
-                        const container = document.getElementById('transactionsContainer');
-
-                        if (transactions.length === 0) {
-                            container.innerHTML = '<div class="empty-message">No transactions yet</div>';
-                            return;
-                        }
-
-                        container.innerHTML = transactions.map(t => {
-                            const date = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-                            const typeLabel = t.type === 'debit' ? 'Debit' : 'Payment';
-                            const typeClass = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
-                            const sign = t.type === 'debit' ? '+' : '-';
-
-                            return `
-                                <div class="transaction-item">
-                                    <div>
-                                        <div class="transaction-date">${date}</div>
-                                        <div class="transaction-type">${typeLabel}</div>
-                                    </div>
-                                    <div style="display: flex; align-items: center; gap: 12px;">
-                                        <div class="transaction-amount ${typeClass}">${sign}₹${t.amount}</div>
-                                        <button class="transaction-delete" onclick="app.confirmDeleteTransaction('${t.id}')">❌</button>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('');
-                    });
-                });
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="transaction-amount ${typeClass}">${sign}₹${t.amount}</div>
+                                <button class="transaction-delete" onclick="app.confirmDeleteTransaction(${t.id})">❌</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
 
             handlePayment(e) {
@@ -1116,29 +1080,29 @@
                     return;
                 }
 
-                DataManager.getCustomerBalance(this.currentCustomerId, (balance) => {
-                    if (amount > balance.balance) {
-                        alert(`Cannot add payment more than outstanding balance of ₹${balance.balance}`);
-                        return;
-                    }
+                const { balance } = DataManager.getCustomerBalance(this.currentCustomerId);
 
-                    DataManager.addTransaction(this.currentCustomerId, amount, 'payment');
-                    document.getElementById('paymentAmount').value = '';
-                });
+                if (amount > balance) {
+                    alert(`Cannot add payment more than outstanding balance of ₹${balance}`);
+                    return;
+                }
+
+                DataManager.addTransaction(this.currentCustomerId, amount, 'payment');
+                document.getElementById('paymentAmount').value = '';
+                this.renderCustomerDetail();
             }
 
             showArchiveConfirm() {
-                DataManager.getAllCustomers((customers) => {
-                    const customer = customers.find(c => c.id === this.currentCustomerId);
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
 
-                    document.getElementById('confirmTitle').textContent = 'Archive Customer?';
-                    document.getElementById('confirmMessage').textContent = `${customer.name} will be hidden from the dashboard.`;
-                    document.getElementById('confirmYes').textContent = 'Archive';
-                    document.getElementById('confirmYes').className = 'btn-warning';
-                    document.getElementById('confirmYes').onclick = () => this.archiveCustomer();
+                document.getElementById('confirmTitle').textContent = 'Archive Customer?';
+                document.getElementById('confirmMessage').textContent = `${customer.name} will be hidden from the dashboard.`;
+                document.getElementById('confirmYes').textContent = 'Archive';
+                document.getElementById('confirmYes').className = 'btn-warning';
+                document.getElementById('confirmYes').onclick = () => this.archiveCustomer();
 
-                    this.showModal('confirmModal');
-                });
+                this.showModal('confirmModal');
             }
 
             archiveCustomer() {
@@ -1148,17 +1112,16 @@
             }
 
             showDeleteConfirm() {
-                DataManager.getAllCustomers((customers) => {
-                    const customer = customers.find(c => c.id === this.currentCustomerId);
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
 
-                    document.getElementById('confirmTitle').textContent = 'Delete Customer?';
-                    document.getElementById('confirmMessage').textContent = `Are you sure you want to delete ${customer.name}? This will delete all transactions.`;
-                    document.getElementById('confirmYes').textContent = 'Delete';
-                    document.getElementById('confirmYes').className = 'btn-danger';
-                    document.getElementById('confirmYes').onclick = () => this.deleteCustomer();
+                document.getElementById('confirmTitle').textContent = 'Delete Customer?';
+                document.getElementById('confirmMessage').textContent = `Are you sure you want to delete ${customer.name}? This will delete all transactions.`;
+                document.getElementById('confirmYes').textContent = 'Delete';
+                document.getElementById('confirmYes').className = 'btn-danger';
+                document.getElementById('confirmYes').onclick = () => this.deleteCustomer();
 
-                    this.showModal('confirmModal');
-                });
+                this.showModal('confirmModal');
             }
 
             deleteCustomer() {
@@ -1168,14 +1131,13 @@
             }
 
             showEditCustomerModal() {
-                DataManager.getAllCustomers((customers) => {
-                    const customer = customers.find(c => c.id === this.currentCustomerId);
+                const customers = DataManager.getCustomers();
+                const customer = customers.find(c => c.id === this.currentCustomerId);
 
-                    document.getElementById('editCustomerName').value = customer.name;
-                    document.getElementById('editCustomerNotes').value = customer.notes;
-                    this.showModal('editCustomerModal');
-                    document.getElementById('editCustomerName').focus();
-                });
+                document.getElementById('editCustomerName').value = customer.name;
+                document.getElementById('editCustomerNotes').value = customer.notes;
+                this.showModal('editCustomerModal');
+                document.getElementById('editCustomerName').focus();
             }
 
             handleEditCustomer(e) {
