@@ -8,51 +8,44 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; color: #1f2937; }
         .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-
-        /* PIN SCREEN */
         #pinScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); }
         .pin-card { background: white; border-radius: 16px; padding: 40px 36px; width: 100%; max-width: 360px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); text-align: center; }
         .pin-logo { font-size: 48px; margin-bottom: 8px; }
         .pin-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
         .pin-subtitle { font-size: 13px; color: #6b7280; margin-bottom: 28px; }
-        #pinInput { width: 100%; padding: 14px 16px; font-size: 28px; letter-spacing: 12px; text-align: center; border: 2px solid #d1d5db; border-radius: 10px; font-family: monospace; outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
+        #pinInput { width: 100%; padding: 14px 16px; font-size: 28px; letter-spacing: 12px; text-align: center; border: 2px solid #d1d5db; border-radius: 10px; font-family: monospace; outline: none; margin-bottom: 12px; display: block; }
         #pinInput:focus { border-color: #3b82f6; }
         #pinInput.pin-error { border-color: #ef4444; animation: shake 0.4s ease; }
         @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
-        .pin-error-msg { color: #ef4444; font-size: 13px; min-height: 18px; margin-bottom: 12px; }
-        #pinEnterBtn { width: 100%; padding: 14px; background: #3b82f6; color: white; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; }
-        #pinEnterBtn:hover { background: #2563eb; }
-        #pinEnterBtn:disabled { background: #93c5fd; cursor: not-allowed; }
+        .pin-error-msg { color: #ef4444; font-size: 13px; min-height: 20px; margin-bottom: 12px; }
+        #pinEnterBtn { width: 100%; padding: 14px; background: #3b82f6; color: white; font-size: 16px; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; display: block; }
+        #pinEnterBtn:disabled { background: #93c5fd; }
         .pin-hint { margin-top: 16px; font-size: 12px; color: #9ca3af; }
-        .spinner { width: 18px; height: 18px; border: 2px solid #e5e7eb; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px; }
+        .spinner { width: 16px; height: 16px; border: 2px solid #ffffff44; border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* APP */
         #appWrapper { display: none; }
         header { background: white; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; flex-wrap: wrap; gap: 10px; }
         .header-left { display: flex; align-items: center; gap: 10px; }
-        h1 { font-size: 24px; font-weight: bold; }
-        .shop-badge { background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; letter-spacing: 1px; }
+        h1 { font-size: 22px; font-weight: bold; }
+        .shop-badge { background: #dbeafe; color: #1e40af; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
         .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; }
         .sync-dot.syncing { background: #f59e0b; animation: pulse 1s infinite; }
         .sync-dot.offline { background: #ef4444; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .button-group { display: flex; gap: 10px; align-items: center; }
-        button { padding: 10px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 14px; transition: opacity 0.2s; }
-        button:hover { opacity: 0.85; }
+        .button-group { display: flex; gap: 8px; align-items: center; }
+        button { padding: 10px 14px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-size: 14px; }
         .btn-primary { background: #3b82f6; color: white; }
         .btn-voice { background: #ef4444; color: white; }
         .btn-success { background: #10b981; color: white; }
         .btn-warning { background: #eab308; color: black; }
         .btn-danger { background: #ef4444; color: white; }
         .btn-secondary { background: #d1d5db; color: #1f2937; }
-        .btn-logout { background: none; border: 1px solid #d1d5db; color: #6b7280; font-size: 13px; padding: 8px 12px; }
-
+        .btn-logout { background: none; border: 1px solid #d1d5db; color: #6b7280; font-size: 13px; padding: 8px 10px; }
         main { padding: 24px 0; }
         .customers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 24px; }
         .customer-card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 24px; cursor: pointer; transition: all 0.2s; }
-        .customer-card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .customer-card:hover, .customer-card:active { box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(-2px); }
         .customer-name { font-size: 18px; font-weight: bold; margin-bottom: 16px; }
         .customer-stats { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
         .stat-item { display: flex; justify-content: space-between; }
@@ -61,28 +54,24 @@
         .balance-line { border-top: 2px solid #e5e7eb; padding-top: 12px; margin-top: 12px; font-size: 16px; font-weight: bold; }
         .balance-positive { color: #10b981; }
         .balance-negative { color: #ef4444; }
-
-        /* MODALS */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 50; align-items: center; justify-content: center; padding: 16px; }
         .modal.active { display: flex; }
         .modal-content { background: white; border-radius: 8px; padding: 24px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px rgba(0,0,0,0.15); }
         .modal-title { font-size: 20px; font-weight: bold; margin-bottom: 16px; }
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
-        input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; font-size: 14px; }
-        input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        input[type="text"], input[type="number"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
+        input:focus, textarea:focus { outline: none; border-color: #3b82f6; }
         textarea { resize: vertical; min-height: 80px; }
         .modal-buttons { display: flex; gap: 12px; margin-top: 24px; }
         .modal-buttons button { flex: 1; }
-
-        /* DETAIL */
         .detail-page { display: none; }
         .detail-page.active { display: block; }
-        .back-button { color: #3b82f6; font-weight: 600; margin-bottom: 16px; background: none; border: none; cursor: pointer; padding: 0; font-size: 16px; }
+        .back-button { color: #3b82f6; font-weight: 600; margin-bottom: 16px; background: none; border: none; cursor: pointer; padding: 0; font-size: 16px; display: block; }
         .detail-header { background: white; border-bottom: 1px solid #e5e7eb; margin: -24px -16px 24px -16px; padding: 24px 16px; }
-        .customer-title { font-size: 28px; font-weight: bold; margin-bottom: 8px; }
-        .customer-notes { color: #6b7280; font-size: 14px; }
-        .edit-button { color: #3b82f6; font-size: 14px; margin-top: 8px; background: none; border: none; cursor: pointer; padding: 0; }
+        .customer-title { font-size: 24px; font-weight: bold; margin-bottom: 8px; }
+        .customer-notes-text { color: #6b7280; font-size: 14px; }
+        .edit-button { color: #3b82f6; font-size: 14px; margin-top: 8px; background: none; border: none; cursor: pointer; padding: 0; display: block; }
         .balance-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 12px; margin-bottom: 24px; }
         .balance-card.warning { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .balance-label { font-size: 14px; opacity: 0.9; margin-bottom: 8px; }
@@ -92,9 +81,8 @@
         .breakdown-value { font-size: 18px; font-weight: 600; margin-top: 4px; }
         .section { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #e5e7eb; }
         .section-title { font-size: 16px; font-weight: bold; margin-bottom: 16px; }
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e5e7eb; animation: slideIn 0.3s ease; }
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e5e7eb; }
         .transaction-item:last-child { border-bottom: none; }
-        @keyframes slideIn { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
         .transaction-date { font-weight: 600; font-size: 14px; }
         .transaction-type { color: #6b7280; font-size: 12px; margin-top: 2px; }
         .transaction-amount { font-weight: bold; font-size: 16px; }
@@ -105,42 +93,33 @@
         .payment-form { display: flex; gap: 12px; }
         .payment-form input { flex: 1; }
         .danger-zone { border-top: 1px solid #fecaca; padding-top: 20px; display: flex; flex-direction: column; gap: 12px; }
-
-        /* VOICE */
-        .listening-indicator { display: inline-block; width: 12px; height: 12px; background: #ef4444; border-radius: 50%; margin-right: 8px; animation: pulse 1s infinite; }
+        .listening-indicator { display: inline-block; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; margin-right: 6px; animation: pulse 1s infinite; }
         .voice-hint { background: #dbeafe; color: #1e40af; padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 13px; border-left: 4px solid #3b82f6; }
-        .parsed-result { background: #dcfce7; border: 2px solid #10b981; border-radius: 6px; padding: 16px; margin-bottom: 16px; }
-        .parsed-label { font-size: 12px; color: #6b7280; margin-bottom: 4px; }
-        .parsed-content { display: flex; justify-content: space-between; align-items: center; }
+        .parsed-result { background: #dcfce7; border: 2px solid #10b981; border-radius: 6px; padding: 16px; margin-top: 16px; }
+        .parsed-content { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
         .parsed-name { font-size: 18px; font-weight: bold; }
         .parsed-amount { font-size: 24px; font-weight: bold; color: #10b981; }
-
-        @media (max-width: 768px) {
-            .header-content { flex-direction: column; gap: 12px; }
+        @media (max-width: 600px) {
             .button-group { width: 100%; }
-            .button-group button { flex: 1; }
+            .button-group button { flex: 1; font-size: 12px; padding: 8px 6px; }
             .customers-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 20px; }
-            .balance-amount { font-size: 28px; }
         }
     </style>
 </head>
 <body>
 
-<!-- PIN SCREEN -->
 <div id="pinScreen">
     <div class="pin-card">
         <div class="pin-logo">🏪</div>
         <div class="pin-title">Kirana Ledger</div>
         <div class="pin-subtitle">Enter shop PIN to continue</div>
-        <input type="password" id="pinInput" maxlength="8" placeholder="••••" inputmode="numeric">
+        <input type="tel" id="pinInput" maxlength="8" placeholder="••••">
         <div class="pin-error-msg" id="pinErrorMsg"></div>
         <button id="pinEnterBtn">Enter</button>
         <div class="pin-hint">All staff use the same PIN</div>
     </div>
 </div>
 
-<!-- APP -->
 <div id="appWrapper">
     <header>
         <div class="container">
@@ -158,7 +137,6 @@
             </div>
         </div>
     </header>
-
     <main class="container">
         <div id="dashboardView">
             <div id="customersContainer" class="customers-grid"></div>
@@ -167,7 +145,7 @@
             <button class="back-button" id="backBtn">← Back</button>
             <div class="detail-header">
                 <div id="detailCustomerTitle" class="customer-title"></div>
-                <div id="detailCustomerNotes" class="customer-notes"></div>
+                <div id="detailCustomerNotes" class="customer-notes-text"></div>
                 <button id="editCustomerBtn" class="edit-button">Edit</button>
             </div>
             <div id="detailBalanceCard" class="balance-card"></div>
@@ -190,7 +168,7 @@
     </main>
 </div>
 
-<!-- Add Customer Modal -->
+<!-- Modals -->
 <div id="addCustomerModal" class="modal">
     <div class="modal-content">
         <div class="modal-title">Add New Customer</div>
@@ -202,8 +180,6 @@
         </div>
     </div>
 </div>
-
-<!-- Edit Customer Modal -->
 <div id="editCustomerModal" class="modal">
     <div class="modal-content">
         <div class="modal-title">Edit Customer</div>
@@ -215,16 +191,12 @@
         </div>
     </div>
 </div>
-
-<!-- Voice Modal -->
 <div id="voiceModal" class="modal">
     <div class="modal-content">
         <div class="modal-title">Voice Input</div>
         <div id="voiceContent"></div>
     </div>
 </div>
-
-<!-- Confirm Modal -->
 <div id="confirmModal" class="modal">
     <div class="modal-content">
         <div class="modal-title" id="confirmTitle"></div>
@@ -236,14 +208,13 @@
     </div>
 </div>
 
-<!-- Firebase via CDN (unpkg — works in browser, no bundling needed) -->
-<script type="module">
-import { initializeApp }                           from "https://unpkg.com/firebase@10.12.2/app/dist/index.mjs";
-import { getDatabase, ref, push, update, remove,
-         get, onValue, off }                       from "https://unpkg.com/firebase@10.12.2/database/dist/index.mjs";
+<!-- Firebase SDK — compat build, works as plain <script> tags, no module needed -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-// ─── YOUR FIREBASE CONFIG ────────────────────────────────────────────────────
-const firebaseConfig = {
+<script>
+// ── FIREBASE INIT ────────────────────────────────────────────────────────────
+firebase.initializeApp({
     apiKey:            "AIzaSyDaQPed0WWrMEAnk4au7eGWWClw3OmbF5I",
     authDomain:        "kirana-389ab.firebaseapp.com",
     databaseURL:       "https://kirana-389ab-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -251,66 +222,68 @@ const firebaseConfig = {
     storageBucket:     "kirana-389ab.firebasestorage.app",
     messagingSenderId: "130371493680",
     appId:             "1:130371493680:web:85ee7fa639adb3f9e3f2f5"
-};
+});
+var db = firebase.database();
 
-const firebaseApp = initializeApp(firebaseConfig);
-const db          = getDatabase(firebaseApp);
+// ── STATE ────────────────────────────────────────────────────────────────────
+var shopPath          = null;
+var unsubscribers     = [];
+var _customers        = {};
+var _transactions     = {};
+var currentCustomerId = null;
 
-// ─── STATE ───────────────────────────────────────────────────────────────────
-let shopPath     = null;   // e.g. "shops/4582"
-let unsubscribers = [];
-let _customers    = {};
-let _transactions = {};
-let currentCustomerId = null;
-
-// ─── PIN LOGIN ────────────────────────────────────────────────────────────────
+// ── PIN LOGIN ────────────────────────────────────────────────────────────────
 document.getElementById('pinEnterBtn').addEventListener('click', attemptLogin);
-document.getElementById('pinInput').addEventListener('keypress', e => { if (e.key === 'Enter') attemptLogin(); });
+document.getElementById('pinInput').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') attemptLogin();
+});
 
-async function attemptLogin() {
-    const pin    = document.getElementById('pinInput').value.trim();
-    const errMsg = document.getElementById('pinErrorMsg');
-    const btn    = document.getElementById('pinEnterBtn');
-    errMsg.textContent = '';
+function attemptLogin() {
+    var pin = document.getElementById('pinInput').value.trim();
+    var btn = document.getElementById('pinEnterBtn');
+    document.getElementById('pinErrorMsg').textContent = '';
 
     if (pin.length < 4) { showPinError('PIN must be at least 4 digits'); return; }
 
-    btn.disabled      = true;
-    btn.innerHTML     = '<span class="spinner"></span> Connecting…';
+    btn.disabled   = true;
+    btn.innerHTML  = '<span class="spinner"></span> Connecting…';
 
-    try {
-        const snap = await get(ref(db, `shops/${pin}/meta`));
+    db.ref('shops/' + pin + '/meta').once('value').then(function(snap) {
         if (!snap.exists()) {
-            await update(ref(db, `shops/${pin}/meta`), { created: new Date().toISOString() });
+            return db.ref('shops/' + pin + '/meta').set({ created: new Date().toISOString() });
         }
+    }).then(function() {
         sessionStorage.setItem('kirana_pin', pin);
         enterApp(pin);
-    } catch (e) {
-        showPinError('Cannot connect. Check internet.');
+    }).catch(function(err) {
+        showPinError('Cannot connect. Check internet or Firebase rules.');
+        console.error(err);
         btn.disabled  = false;
         btn.innerHTML = 'Enter';
-    }
+    });
 }
 
 function showPinError(msg) {
     document.getElementById('pinErrorMsg').textContent = msg;
-    const input = document.getElementById('pinInput');
+    var input = document.getElementById('pinInput');
     input.classList.add('pin-error');
-    setTimeout(() => input.classList.remove('pin-error'), 500);
-    document.getElementById('pinEnterBtn').disabled  = false;
-    document.getElementById('pinEnterBtn').innerHTML = 'Enter';
+    setTimeout(function() { input.classList.remove('pin-error'); }, 500);
+    var btn = document.getElementById('pinEnterBtn');
+    btn.disabled  = false;
+    btn.innerHTML = 'Enter';
 }
 
+// ── APP ENTRY / EXIT ─────────────────────────────────────────────────────────
 function enterApp(pin) {
-    shopPath = `shops/${pin}`;
+    shopPath = 'shops/' + pin;
     document.getElementById('pinScreen').style.display  = 'none';
     document.getElementById('appWrapper').style.display = 'block';
-    document.getElementById('shopBadge').textContent    = `PIN ${pin}`;
+    document.getElementById('shopBadge').textContent    = 'PIN ' + pin;
     subscribeToFirebase();
 }
 
 function logout() {
-    unsubscribers.forEach(fn => fn());
+    unsubscribers.forEach(function(fn) { fn(); });
     unsubscribers = [];
     _customers = {}; _transactions = {};
     shopPath = null; currentCustomerId = null;
@@ -322,147 +295,152 @@ function logout() {
     document.getElementById('pinEnterBtn').innerHTML    = 'Enter';
 }
 
-// ─── FIREBASE REALTIME SYNC ───────────────────────────────────────────────────
+// ── REALTIME SYNC ─────────────────────────────────────────────────────────────
 function subscribeToFirebase() {
-    const syncDot = document.getElementById('syncDot');
+    var syncDot = document.getElementById('syncDot');
     syncDot.className = 'sync-dot syncing';
 
-    const unsubCust = onValue(ref(db, `${shopPath}/customers`), snap => {
+    var custRef = db.ref(shopPath + '/customers');
+    custRef.on('value', function(snap) {
         _customers = snap.val() || {};
         syncDot.className = 'sync-dot';
         currentCustomerId ? renderDetail() : renderDashboard();
-    }, () => syncDot.className = 'sync-dot offline');
+    }, function() { syncDot.className = 'sync-dot offline'; });
 
-    const unsubTx = onValue(ref(db, `${shopPath}/transactions`), snap => {
+    var txRef = db.ref(shopPath + '/transactions');
+    txRef.on('value', function(snap) {
         _transactions = snap.val() || {};
         currentCustomerId ? renderDetail() : renderDashboard();
     });
 
-    unsubscribers.push(unsubCust, unsubTx);
+    unsubscribers.push(function() { custRef.off(); });
+    unsubscribers.push(function() { txRef.off(); });
 }
 
-// ─── DATA HELPERS ─────────────────────────────────────────────────────────────
+// ── DATA ──────────────────────────────────────────────────────────────────────
 function getCustomers()    { return Object.values(_customers); }
 function getTransactions() { return Object.values(_transactions); }
 
 function getBalance(customerId) {
-    let totalDebit = 0, totalPayment = 0;
-    getTransactions().filter(t => t.customer_id === customerId).forEach(t => {
+    var totalDebit = 0, totalPayment = 0;
+    getTransactions().filter(function(t) { return t.customer_id === customerId; }).forEach(function(t) {
         if (t.type === 'debit')   totalDebit   += t.amount;
         if (t.type === 'payment') totalPayment += t.amount;
     });
-    return { totalDebit, totalPayment, balance: totalDebit - totalPayment };
+    return { totalDebit: totalDebit, totalPayment: totalPayment, balance: totalDebit - totalPayment };
 }
 
 function getCustomerTx(customerId) {
     return getTransactions()
-        .filter(t => t.customer_id === customerId)
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+        .filter(function(t) { return t.customer_id === customerId; })
+        .sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
 }
 
 function findCustKey(id) {
-    const e = Object.entries(_customers).find(([,c]) => c.id === id);
-    return e ? e[0] : null;
+    var entries = Object.entries(_customers);
+    for (var i = 0; i < entries.length; i++) {
+        if (entries[i][1].id === id) return entries[i][0];
+    }
+    return null;
 }
 
-async function addCustomer(name, notes) {
-    const c = { id: Date.now(), name: name.trim(), notes: notes.trim(), status: 'active', created_at: new Date().toISOString() };
-    const r = await push(ref(db, `${shopPath}/customers`), c);
-    return { ...c, _key: r.key };
+function addCustomer(name, notes, callback) {
+    var c = { id: Date.now(), name: name.trim(), notes: notes.trim(), status: 'active', created_at: new Date().toISOString() };
+    var ref = db.ref(shopPath + '/customers').push(c);
+    ref.then(function() { if (callback) callback(c); });
+    return c;
 }
 
-async function updateCustomer(id, name, notes) {
-    const key = findCustKey(id);
-    if (key) await update(ref(db, `${shopPath}/customers/${key}`), { name: name.trim(), notes: notes.trim() });
+function updateCustomer(id, name, notes) {
+    var key = findCustKey(id);
+    if (key) db.ref(shopPath + '/customers/' + key).update({ name: name.trim(), notes: notes.trim() });
 }
 
-async function archiveCustomer(id) {
-    const key = findCustKey(id);
-    if (key) await update(ref(db, `${shopPath}/customers/${key}`), { status: 'archived' });
+function archiveCustomer(id) {
+    var key = findCustKey(id);
+    if (key) db.ref(shopPath + '/customers/' + key).update({ status: 'archived' });
 }
 
-async function deleteCustomer(id) {
-    const key = findCustKey(id);
-    if (key) await remove(ref(db, `${shopPath}/customers/${key}`));
-    const txKeys = Object.entries(_transactions).filter(([,t]) => t.customer_id === id).map(([k]) => k);
-    for (const k of txKeys) await remove(ref(db, `${shopPath}/transactions/${k}`));
+function deleteCustomer(id) {
+    var key = findCustKey(id);
+    if (key) db.ref(shopPath + '/customers/' + key).remove();
+    Object.entries(_transactions).forEach(function(entry) {
+        if (entry[1].customer_id === id) db.ref(shopPath + '/transactions/' + entry[0]).remove();
+    });
 }
 
-async function addTransaction(customerId, amount, type) {
-    const tx = { id: Date.now(), customer_id: customerId, amount: parseFloat(amount), type, date: new Date().toISOString() };
-    await push(ref(db, `${shopPath}/transactions`), tx);
-    return tx;
+function addTransaction(customerId, amount, type) {
+    var tx = { id: Date.now(), customer_id: customerId, amount: parseFloat(amount), type: type, date: new Date().toISOString() };
+    db.ref(shopPath + '/transactions').push(tx);
 }
 
-async function deleteTransaction(txId) {
-    const e = Object.entries(_transactions).find(([,t]) => t.id === txId);
-    if (e) await remove(ref(db, `${shopPath}/transactions/${e[0]}`));
+function deleteTx(txId) {
+    var entries = Object.entries(_transactions);
+    for (var i = 0; i < entries.length; i++) {
+        if (entries[i][1].id === txId) { db.ref(shopPath + '/transactions/' + entries[i][0]).remove(); break; }
+    }
 }
 
-// ─── RENDER: DASHBOARD ────────────────────────────────────────────────────────
+// ── RENDER DASHBOARD ──────────────────────────────────────────────────────────
 function renderDashboard() {
-    const customers = getCustomers().filter(c => c.status === 'active');
-    const container = document.getElementById('customersContainer');
+    var customers = getCustomers().filter(function(c) { return c.status === 'active'; });
+    var container = document.getElementById('customersContainer');
     if (customers.length === 0) {
         container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6b7280;padding:48px 24px">No customers yet. Tap ➕ Add to get started.</p>';
         return;
     }
-    container.innerHTML = customers.map(c => {
-        const { balance, totalDebit, totalPayment } = getBalance(c.id);
-        const cls = balance > 0 ? 'balance-negative' : 'balance-positive';
-        return `<div class="customer-card" onclick="window._showDetail(${c.id})">
-            <div class="customer-name">${c.name}</div>
-            <div class="customer-stats">
-                <div class="stat-item"><span class="stat-label">Debit:</span><span class="stat-value">₹${totalDebit}</span></div>
-                <div class="stat-item"><span class="stat-label">Paid:</span><span class="stat-value">₹${totalPayment}</span></div>
-                <div class="stat-item balance-line"><span class="stat-label">Balance:</span><span class="stat-value ${cls}">₹${balance}</span></div>
-            </div>
-        </div>`;
+    container.innerHTML = customers.map(function(c) {
+        var bal = getBalance(c.id);
+        var cls = bal.balance > 0 ? 'balance-negative' : 'balance-positive';
+        return '<div class="customer-card" onclick="showDetail(' + c.id + ')">' +
+            '<div class="customer-name">' + c.name + '</div>' +
+            '<div class="customer-stats">' +
+            '<div class="stat-item"><span class="stat-label">Debit:</span><span class="stat-value">₹' + bal.totalDebit + '</span></div>' +
+            '<div class="stat-item"><span class="stat-label">Paid:</span><span class="stat-value">₹' + bal.totalPayment + '</span></div>' +
+            '<div class="stat-item balance-line"><span class="stat-label">Balance:</span><span class="stat-value ' + cls + '">₹' + bal.balance + '</span></div>' +
+            '</div></div>';
     }).join('');
 }
 
-// ─── RENDER: DETAIL ───────────────────────────────────────────────────────────
+// ── RENDER DETAIL ─────────────────────────────────────────────────────────────
 function renderDetail() {
-    const c = getCustomers().find(c => c.id === currentCustomerId);
+    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
     if (!c) return;
     document.getElementById('detailCustomerTitle').textContent = c.name;
     document.getElementById('detailCustomerNotes').textContent = c.notes || '';
-
-    const { balance, totalDebit, totalPayment } = getBalance(c.id);
-    const card = document.getElementById('detailBalanceCard');
-    card.className = balance > 5000 ? 'balance-card warning' : 'balance-card';
-    card.innerHTML = `<div class="balance-label">Current Balance</div>
-        <div class="balance-amount">₹${balance}</div>
-        <div class="balance-breakdown">
-            <div><div class="breakdown-label">Total Debit</div><div class="breakdown-value">₹${totalDebit}</div></div>
-            <div><div class="breakdown-label">Total Paid</div><div class="breakdown-value">₹${totalPayment}</div></div>
-        </div>`;
-
-    const txs = getCustomerTx(c.id);
-    const con = document.getElementById('transactionsContainer');
+    var bal  = getBalance(c.id);
+    var card = document.getElementById('detailBalanceCard');
+    card.className = bal.balance > 5000 ? 'balance-card warning' : 'balance-card';
+    card.innerHTML = '<div class="balance-label">Current Balance</div>' +
+        '<div class="balance-amount">₹' + bal.balance + '</div>' +
+        '<div class="balance-breakdown">' +
+        '<div><div class="breakdown-label">Total Debit</div><div class="breakdown-value">₹' + bal.totalDebit + '</div></div>' +
+        '<div><div class="breakdown-label">Total Paid</div><div class="breakdown-value">₹' + bal.totalPayment + '</div></div>' +
+        '</div>';
+    var txs = getCustomerTx(c.id);
+    var con = document.getElementById('transactionsContainer');
     if (txs.length === 0) { con.innerHTML = '<div class="empty-message">No transactions yet</div>'; return; }
-    con.innerHTML = txs.map(t => {
-        const date  = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-        const cls   = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
-        const sign  = t.type === 'debit' ? '+' : '-';
-        const label = t.type === 'debit' ? 'Debit' : 'Payment';
-        return `<div class="transaction-item">
-            <div><div class="transaction-date">${date}</div><div class="transaction-type">${label}</div></div>
-            <div style="display:flex;align-items:center;gap:12px">
-                <div class="transaction-amount ${cls}">${sign}₹${t.amount}</div>
-                <button class="transaction-delete" onclick="window._deleteTx(${t.id})">❌</button>
-            </div>
-        </div>`;
+    con.innerHTML = txs.map(function(t) {
+        var date  = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+        var cls   = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
+        var sign  = t.type === 'debit' ? '+' : '-';
+        var label = t.type === 'debit' ? 'Debit' : 'Payment';
+        return '<div class="transaction-item">' +
+            '<div><div class="transaction-date">' + date + '</div><div class="transaction-type">' + label + '</div></div>' +
+            '<div style="display:flex;align-items:center;gap:12px">' +
+            '<div class="transaction-amount ' + cls + '">' + sign + '₹' + t.amount + '</div>' +
+            '<button class="transaction-delete" onclick="confirmDeleteTx(' + t.id + ')">❌</button>' +
+            '</div></div>';
     }).join('');
 }
 
-// ─── NAVIGATION ───────────────────────────────────────────────────────────────
-window._showDetail = function(id) {
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function showDetail(id) {
     currentCustomerId = id;
     document.getElementById('dashboardView').style.display = 'none';
     document.getElementById('detailView').classList.add('active');
     renderDetail();
-};
+}
 
 function showDashboard() {
     currentCustomerId = null;
@@ -471,165 +449,159 @@ function showDashboard() {
     renderDashboard();
 }
 
-// ─── MODALS ───────────────────────────────────────────────────────────────────
+// ── MODAL HELPERS ─────────────────────────────────────────────────────────────
 function showModal(id)  { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-function confirm(title, msg, btnLabel, btnClass, onYes) {
+function showConfirm(title, msg, btnLabel, btnClass, onYes) {
     document.getElementById('confirmTitle').textContent   = title;
     document.getElementById('confirmMessage').textContent = msg;
-    document.getElementById('confirmYes').textContent     = btnLabel;
-    document.getElementById('confirmYes').className       = btnClass;
-    document.getElementById('confirmYes').onclick         = onYes;
+    var yes = document.getElementById('confirmYes');
+    yes.textContent = btnLabel;
+    yes.className   = btnClass;
+    yes.onclick     = onYes;
     showModal('confirmModal');
 }
 
-// ─── EVENT WIRING ─────────────────────────────────────────────────────────────
+// ── EVENT LISTENERS ───────────────────────────────────────────────────────────
 document.getElementById('logoutBtn').addEventListener('click', logout);
 document.getElementById('backBtn').addEventListener('click', showDashboard);
-document.getElementById('confirmNo').addEventListener('click', () => closeModal('confirmModal'));
+document.getElementById('confirmNo').addEventListener('click', function() { closeModal('confirmModal'); });
 
-// Add customer
-document.getElementById('addCustomerBtn').addEventListener('click', () => {
+document.getElementById('addCustomerBtn').addEventListener('click', function() {
     document.getElementById('customerName').value  = '';
     document.getElementById('customerNotes').value = '';
     showModal('addCustomerModal');
-    document.getElementById('customerName').focus();
+    setTimeout(function() { document.getElementById('customerName').focus(); }, 100);
 });
-document.getElementById('closeAddModal').addEventListener('click', () => closeModal('addCustomerModal'));
-document.getElementById('submitAddCustomer').addEventListener('click', async () => {
-    const name = document.getElementById('customerName').value.trim();
+document.getElementById('closeAddModal').addEventListener('click', function() { closeModal('addCustomerModal'); });
+document.getElementById('submitAddCustomer').addEventListener('click', function() {
+    var name = document.getElementById('customerName').value.trim();
     if (!name) { alert('Please enter customer name'); return; }
-    await addCustomer(name, document.getElementById('customerNotes').value);
+    addCustomer(name, document.getElementById('customerNotes').value);
     closeModal('addCustomerModal');
 });
 
-// Edit customer
-document.getElementById('editCustomerBtn').addEventListener('click', () => {
-    const c = getCustomers().find(c => c.id === currentCustomerId);
+document.getElementById('editCustomerBtn').addEventListener('click', function() {
+    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
     document.getElementById('editCustomerName').value  = c.name;
     document.getElementById('editCustomerNotes').value = c.notes || '';
     showModal('editCustomerModal');
 });
-document.getElementById('closeEditModal').addEventListener('click', () => closeModal('editCustomerModal'));
-document.getElementById('submitEditCustomer').addEventListener('click', async () => {
-    const name = document.getElementById('editCustomerName').value.trim();
-    if (!name) { alert('Customer name cannot be empty'); return; }
-    await updateCustomer(currentCustomerId, name, document.getElementById('editCustomerNotes').value);
+document.getElementById('closeEditModal').addEventListener('click', function() { closeModal('editCustomerModal'); });
+document.getElementById('submitEditCustomer').addEventListener('click', function() {
+    var name = document.getElementById('editCustomerName').value.trim();
+    if (!name) { alert('Name cannot be empty'); return; }
+    updateCustomer(currentCustomerId, name, document.getElementById('editCustomerNotes').value);
     closeModal('editCustomerModal');
 });
 
-// Payment
-document.getElementById('savePaymentBtn').addEventListener('click', async () => {
-    const amount = parseFloat(document.getElementById('paymentAmount').value);
+document.getElementById('savePaymentBtn').addEventListener('click', function() {
+    var amount = parseFloat(document.getElementById('paymentAmount').value);
     if (isNaN(amount) || amount <= 0) { alert('Enter a valid amount'); return; }
-    const { balance } = getBalance(currentCustomerId);
-    if (amount > balance) { alert(`Cannot exceed outstanding balance of ₹${balance}`); return; }
-    await addTransaction(currentCustomerId, amount, 'payment');
+    var bal = getBalance(currentCustomerId);
+    if (amount > bal.balance) { alert('Cannot exceed outstanding balance of ₹' + bal.balance); return; }
+    addTransaction(currentCustomerId, amount, 'payment');
     document.getElementById('paymentAmount').value = '';
 });
 
-// Archive / Delete
-document.getElementById('archiveBtn').addEventListener('click', () => {
-    const c = getCustomers().find(c => c.id === currentCustomerId);
-    confirm('Archive Customer?', `${c.name} will be hidden from dashboard.`, 'Archive', 'btn-warning', async () => {
-        await archiveCustomer(currentCustomerId);
-        closeModal('confirmModal');
-        showDashboard();
-    });
-});
-document.getElementById('deleteBtn').addEventListener('click', () => {
-    const c = getCustomers().find(c => c.id === currentCustomerId);
-    confirm('Delete Customer?', `Delete ${c.name} and all their transactions? This cannot be undone.`, 'Delete', 'btn-danger', async () => {
-        await deleteCustomer(currentCustomerId);
+document.getElementById('archiveBtn').addEventListener('click', function() {
+    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
+    showConfirm('Archive Customer?', c.name + ' will be hidden from dashboard.', 'Archive', 'btn-warning', function() {
+        archiveCustomer(currentCustomerId);
         closeModal('confirmModal');
         showDashboard();
     });
 });
 
-// Delete transaction
-window._deleteTx = function(txId) {
-    confirm('Delete Transaction?', 'Are you sure?', 'Delete', 'btn-danger', async () => {
-        await deleteTransaction(txId);
+document.getElementById('deleteBtn').addEventListener('click', function() {
+    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
+    showConfirm('Delete Customer?', 'Delete ' + c.name + ' and all transactions? Cannot be undone.', 'Delete', 'btn-danger', function() {
+        deleteCustomer(currentCustomerId);
+        closeModal('confirmModal');
+        showDashboard();
+    });
+});
+
+function confirmDeleteTx(txId) {
+    showConfirm('Delete Transaction?', 'Are you sure?', 'Delete', 'btn-danger', function() {
+        deleteTx(txId);
         closeModal('confirmModal');
     });
-};
+}
 
-// ─── VOICE INPUT ──────────────────────────────────────────────────────────────
-document.getElementById('voiceBtn').addEventListener('click', () => {
-    document.getElementById('voiceContent').innerHTML = `
-        <div class="voice-hint">Say: "Customer Name Amount" — e.g. "Ramesh 100"</div>
-        <div class="form-group"><label class="form-label">Or type:</label>
-        <input type="text" id="voiceInput" placeholder="e.g. Ramesh 100"></div>
-        <div id="voiceStatus"></div>
-        <div id="voiceParsed"></div>
-        <div class="modal-buttons">
-            <button class="btn-primary" id="parseBtn">Parse</button>
-            <button class="btn-secondary" id="closeVoiceModal">Cancel</button>
-        </div>`;
+// ── VOICE ─────────────────────────────────────────────────────────────────────
+document.getElementById('voiceBtn').addEventListener('click', function() {
+    document.getElementById('voiceContent').innerHTML =
+        '<div class="voice-hint">Say: "Customer Name Amount" — e.g. "Ramesh 100"</div>' +
+        '<div class="form-group"><label class="form-label">Or type:</label>' +
+        '<input type="text" id="voiceInput" placeholder="e.g. Ramesh 100"></div>' +
+        '<div id="voiceStatus"></div><div id="voiceParsed"></div>' +
+        '<div class="modal-buttons">' +
+        '<button class="btn-primary" id="parseBtn">Parse</button>' +
+        '<button class="btn-secondary" id="closeVoiceModal">Cancel</button></div>';
     showModal('voiceModal');
-    document.getElementById('closeVoiceModal').addEventListener('click', () => closeModal('voiceModal'));
+    document.getElementById('closeVoiceModal').addEventListener('click', function() { closeModal('voiceModal'); });
     document.getElementById('parseBtn').addEventListener('click', parseVoice);
-    document.getElementById('voiceInput').addEventListener('keypress', e => { if (e.key === 'Enter') parseVoice(); });
+    document.getElementById('voiceInput').addEventListener('keyup', function(e) { if (e.key === 'Enter') parseVoice(); });
     startVoice();
 });
 
 function startVoice() {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { document.getElementById('voiceStatus').innerHTML = '<p style="color:#dc2626">Voice not supported in this browser</p>'; return; }
-    const r = new SR();
+    var r = new SR();
     r.language = 'en-IN'; r.continuous = false; r.interimResults = false;
     document.getElementById('voiceStatus').innerHTML = '<p style="color:#2563eb"><span class="listening-indicator"></span>Listening…</p>';
-    r.onresult = e => {
-        let t = '';
-        for (let i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
+    r.onresult = function(e) {
+        var t = '';
+        for (var i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
         document.getElementById('voiceInput').value = t.trim();
         document.getElementById('voiceStatus').innerHTML = '';
         parseVoice();
     };
-    r.onerror = e => { document.getElementById('voiceStatus').innerHTML = `<p style="color:#dc2626">Error: ${e.error}</p>`; };
+    r.onerror = function(e) { document.getElementById('voiceStatus').innerHTML = '<p style="color:#dc2626">Error: ' + e.error + '</p>'; };
     r.start();
 }
 
 function parseVoice() {
-    const input = document.getElementById('voiceInput').value.trim();
-    const parts = input.split(/\s+/);
-    if (parts.length < 2) {
-        document.getElementById('voiceParsed').innerHTML = '<p style="color:#dc2626;padding:12px;background:#fee2e2;border-radius:6px;margin-top:16px">Say name then amount — e.g. "Ramesh 100"</p>';
-        return;
-    }
-    const amount = parseFloat(parts[parts.length - 1]);
-    const name   = parts.slice(0, -1).join(' ');
-    if (isNaN(amount) || amount <= 0) {
-        document.getElementById('voiceParsed').innerHTML = '<p style="color:#dc2626;padding:12px;background:#fee2e2;border-radius:6px;margin-top:16px">Amount must be a number</p>';
-        return;
-    }
-    document.getElementById('voiceParsed').innerHTML = `
-        <div class="parsed-result">
-            <div class="parsed-label">Confirm transaction:</div>
-            <div class="parsed-content"><div class="parsed-name">${name}</div><div class="parsed-amount">₹${amount}</div></div>
-        </div>`;
-    const btn = document.getElementById('parseBtn');
+    var input = document.getElementById('voiceInput').value.trim();
+    var parts = input.split(/\s+/);
+    var errEl = document.getElementById('voiceParsed');
+    if (parts.length < 2) { errEl.innerHTML = '<p style="color:#dc2626;padding:12px;background:#fee2e2;border-radius:6px;margin-top:16px">Say name then amount — e.g. "Ramesh 100"</p>'; return; }
+    var amount = parseFloat(parts[parts.length - 1]);
+    var name   = parts.slice(0, -1).join(' ');
+    if (isNaN(amount) || amount <= 0) { errEl.innerHTML = '<p style="color:#dc2626;padding:12px;background:#fee2e2;border-radius:6px;margin-top:16px">Amount must be a number</p>'; return; }
+    errEl.innerHTML = '<div class="parsed-result"><div style="font-size:12px;color:#6b7280">Confirm transaction:</div>' +
+        '<div class="parsed-content"><div class="parsed-name">' + name + '</div><div class="parsed-amount">₹' + amount + '</div></div></div>';
+    var btn = document.getElementById('parseBtn');
     btn.textContent = 'Confirm';
     btn.className   = 'btn-success';
-    btn.onclick     = async () => {
-        const existing = getCustomers().find(c => c.name.toLowerCase() === name.toLowerCase());
-        let custId = existing?.id;
-        if (!custId) {
-            if (!window.confirm(`"${name}" doesn't exist. Create new customer?`)) return;
-            const nc = await addCustomer(name, '');
-            custId = nc.id;
+    btn.onclick     = function() {
+        var existing = getCustomers().find(function(c) { return c.name.toLowerCase() === name.toLowerCase(); });
+        if (existing) {
+            addTransaction(existing.id, amount, 'debit');
+            closeModal('voiceModal');
+            alert('✓ Added ₹' + amount + ' debit for ' + name);
+        } else {
+            if (confirm('"' + name + '" doesn\'t exist. Create new customer?')) {
+                addCustomer(name, '', function(c) {
+                    addTransaction(c.id, amount, 'debit');
+                    closeModal('voiceModal');
+                    alert('✓ Added ₹' + amount + ' debit for ' + name);
+                });
+            }
         }
-        await addTransaction(custId, amount, 'debit');
-        closeModal('voiceModal');
-        alert(`✓ Added ₹${amount} debit for ${name}`);
     };
 }
 
-// ─── AUTO LOGIN ───────────────────────────────────────────────────────────────
-const saved = sessionStorage.getItem('kirana_pin');
-if (saved) enterApp(saved);
-
+// ── AUTO LOGIN ────────────────────────────────────────────────────────────────
+var saved = sessionStorage.getItem('kirana_pin');
+if (saved) { enterApp(saved); }
 </script>
 </body>
 </html>
+
+
+
+You are out of free messages until 5:20 PM
