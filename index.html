@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kirana Voice Ledger - Multi User</title>
+    <title>Kirana Voice Ledger - Shared</title>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js"></script>
     <style>
@@ -26,163 +25,7 @@
             padding: 0 16px;
         }
 
-        /* Login Screen */
-        .login-screen {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .login-title {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .login-subtitle {
-            color: #6b7280;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        input[type="text"],
-        input[type="tel"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 16px;
-        }
-
-        input[type="text"]:focus,
-        input[type="tel"]:focus,
-        input[type="password"]:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .pin-input {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .pin-digit {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            font-family: monospace;
-        }
-
-        .pin-digit:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #5568d3;
-        }
-
-        .btn-secondary {
-            background-color: #d1d5db;
-            color: #1f2937;
-            margin-top: 10px;
-        }
-
-        .btn-secondary:hover {
-            background-color: #9ca3af;
-        }
-
-        .error-message {
-            background-color: #fee2e2;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border-left: 4px solid #dc2626;
-        }
-
-        .success-message {
-            background-color: #dcfce7;
-            color: #16a34a;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border-left: 4px solid #16a34a;
-        }
-
-        .toggle-text {
-            text-align: center;
-            color: #6b7280;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-
-        .toggle-link {
-            color: #667eea;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .toggle-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Main App */
-        .app-screen {
-            display: none;
-        }
-
+        /* Header */
         header {
             background: white;
             border-bottom: 1px solid #e5e7eb;
@@ -200,19 +43,8 @@
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-        }
-
-        .header-right {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .user-info {
-            font-size: 12px;
-            color: #6b7280;
         }
 
         .button-group {
@@ -220,49 +52,68 @@
             gap: 12px;
         }
 
-        button.btn-voice {
-            background-color: #ef4444;
-            color: white;
+        button {
             padding: 10px 16px;
             border-radius: 8px;
             border: none;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
             font-size: 14px;
         }
 
-        button.btn-voice:hover {
-            background-color: #dc2626;
-        }
-
-        button.btn-primary {
+        .btn-primary {
             background-color: #3b82f6;
             color: white;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
         }
 
-        button.btn-primary:hover {
+        .btn-primary:hover {
             background-color: #2563eb;
         }
 
-        button.btn-logout {
-            background-color: #f3f4f6;
-            color: #6b7280;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 14px;
+        .btn-voice {
+            background-color: #ef4444;
+            color: white;
         }
 
-        button.btn-logout:hover {
-            background-color: #e5e7eb;
+        .btn-voice:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #059669;
+        }
+
+        .btn-warning {
+            background-color: #eab308;
+            color: black;
+        }
+
+        .btn-warning:hover {
+            background-color: #ca8a04;
+        }
+
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-secondary {
+            background-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background-color: #9ca3af;
         }
 
         main {
@@ -361,6 +212,41 @@
             margin-bottom: 16px;
         }
 
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
         .modal-buttons {
             display: flex;
             gap: 12px;
@@ -369,40 +255,6 @@
 
         .modal-buttons button {
             flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-success {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #059669;
-        }
-
-        .btn-danger {
-            background-color: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 80px;
         }
 
         .detail-page {
@@ -441,6 +293,21 @@
             margin-bottom: 8px;
         }
 
+        .customer-notes {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .edit-button {
+            color: #3b82f6;
+            font-size: 14px;
+            margin-top: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
         .balance-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -449,9 +316,33 @@
             margin-bottom: 24px;
         }
 
+        .balance-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
         .balance-amount {
             font-size: 36px;
             font-weight: bold;
+        }
+
+        .balance-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .breakdown-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 4px;
         }
 
         .section {
@@ -474,11 +365,33 @@
             align-items: center;
             padding: 12px;
             border-bottom: 1px solid #e5e7eb;
+            animation: slideIn 0.3s ease;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .transaction-date {
             font-weight: 600;
             font-size: 14px;
+        }
+
+        .transaction-type {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
         }
 
         .transaction-amount {
@@ -492,6 +405,70 @@
 
         .transaction-payment {
             color: #10b981;
+        }
+
+        .transaction-delete {
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 18px;
+            background: none;
+            border: none;
+            padding: 4px 8px;
+        }
+
+        .empty-message {
+            color: #6b7280;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .payment-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .payment-form input {
+            flex: 1;
+        }
+
+        .payment-form button {
+            flex-shrink: 0;
+        }
+
+        .danger-zone {
+            border-top: 1px solid #fecaca;
+            padding-top: 20px;
+        }
+
+        .danger-zone button {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .listening-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #ef4444;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .voice-hint {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            border-left: 4px solid #3b82f6;
         }
 
         .parsed-result {
@@ -514,6 +491,14 @@
             }
         }
 
+        .parsed-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
         .parsed-content {
             display: flex;
             justify-content: space-between;
@@ -531,26 +516,19 @@
             color: #10b981;
         }
 
-        .listening-indicator {
+        .sync-indicator {
             display: inline-block;
-            width: 12px;
-            height: 12px;
-            background-color: #ef4444;
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-left: 8px;
             animation: pulse 1s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .empty-message {
-            color: #6b7280;
-            font-size: 14px;
-            text-align: center;
-            padding: 20px;
+        .sync-indicator.syncing {
+            animation: none;
+            background-color: #f59e0b;
         }
 
         @media (max-width: 768px) {
@@ -572,126 +550,61 @@
             }
 
             h1 {
-                font-size: 20px;
-            }
-
-            .login-box {
-                padding: 30px 20px;
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-box">
-            <div class="login-title">🏪 Kirana Ledger</div>
-            <div class="login-subtitle">Shared Shop Account</div>
-
-            <div id="loginError" class="error-message" style="display: none;"></div>
-            <div id="loginSuccess" class="success-message" style="display: none;"></div>
-
-            <!-- Login Form -->
-            <div id="loginForm">
-                <div class="form-group">
-                    <label class="form-label">Shop Phone Number</label>
-                    <input type="tel" id="phoneNumber" placeholder="10-digit mobile (e.g., 9876543210)" maxlength="10">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">PIN Code</label>
-                    <input type="password" id="loginPin" placeholder="4-digit PIN" maxlength="4">
-                </div>
-
-                <button class="btn-primary" id="loginBtn">Login</button>
-
-                <div class="toggle-text">
-                    New shop? <span class="toggle-link" id="toggleSignup">Create Account</span>
-                </div>
-            </div>
-
-            <!-- Signup Form -->
-            <div id="signupForm" style="display: none;">
-                <div class="form-group">
-                    <label class="form-label">Shop Phone Number</label>
-                    <input type="tel" id="signupPhone" placeholder="10-digit mobile (e.g., 9876543210)" maxlength="10">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Shop Name</label>
-                    <input type="text" id="shopName" placeholder="e.g., Rajesh Kirana Store">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Set PIN Code</label>
-                    <input type="password" id="signupPin" placeholder="4-digit PIN" maxlength="4">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Confirm PIN</label>
-                    <input type="password" id="confirmPin" placeholder="Confirm PIN" maxlength="4">
-                </div>
-
-                <button class="btn-primary" id="signupBtn">Create Account</button>
-
-                <div class="toggle-text">
-                    Already have account? <span class="toggle-link" id="toggleLogin">Login</span>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>🏪 Kirana Ledger <span class="sync-indicator"></span></h1>
+                <div class="button-group">
+                    <button class="btn-voice" id="voiceBtn">🎤 Voice Input</button>
+                    <button class="btn-primary" id="addCustomerBtn">➕ Add Customer</button>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- App Screen -->
-    <div id="appScreen" class="app-screen">
-        <header>
-            <div class="container">
-                <div class="header-content">
-                    <h1>🏪 <span id="shopNameDisplay"></span></h1>
-                    <div class="header-right">
-                        <div class="user-info">
-                            <div id="phoneDisplay" style="font-size: 12px;"></div>
-                        </div>
-                        <div class="button-group">
-                            <button class="btn-voice" id="voiceBtn">🎤 Voice Input</button>
-                            <button class="btn-primary" id="addCustomerBtn">➕ Add</button>
-                            <button class="btn-logout" id="logoutBtn">Logout</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
+    <main class="container">
+        <!-- Dashboard View -->
+        <div id="dashboardView">
+            <div id="customersContainer" class="customers-grid"></div>
+        </div>
 
-        <main class="container">
-            <!-- Dashboard View -->
-            <div id="dashboardView">
-                <div id="customersContainer" class="customers-grid"></div>
+        <!-- Detail View -->
+        <div id="detailView" class="detail-page">
+            <button class="back-button" id="backBtn">← Back to Dashboard</button>
+            
+            <div class="detail-header">
+                <div id="detailCustomerTitle" class="customer-title"></div>
+                <div id="detailCustomerNotes" class="customer-notes"></div>
+                <button id="editCustomerBtn" class="edit-button">Edit</button>
             </div>
 
-            <!-- Detail View -->
-            <div id="detailView" class="detail-page">
-                <button class="back-button" id="backBtn">← Back</button>
-                
-                <div class="detail-header">
-                    <div id="detailCustomerTitle" class="customer-title"></div>
-                </div>
+            <div id="detailBalanceCard" class="balance-card"></div>
 
-                <div id="detailBalanceCard" class="balance-card"></div>
-
-                <div class="section">
-                    <div class="section-title">Add Payment</div>
-                    <form id="paymentForm" style="display: flex; gap: 12px;">
-                        <input type="number" id="paymentAmount" placeholder="Amount (₹)" min="1" step="1" required style="flex: 1;">
-                        <button type="submit" class="btn-success" style="flex: 0 0 auto; padding: 10px 16px;">Save</button>
-                    </form>
-                </div>
-
-                <div class="section">
-                    <div class="section-title">Transactions</div>
-                    <div id="transactionsContainer"></div>
-                </div>
+            <div class="section">
+                <div class="section-title">Add Payment</div>
+                <form id="paymentForm" class="payment-form">
+                    <input type="number" id="paymentAmount" placeholder="Amount (₹)" min="1" step="1" required>
+                    <button type="submit" class="btn-success">Save Payment</button>
+                </form>
             </div>
-        </main>
-    </div>
+
+            <div class="section">
+                <div class="section-title">Transactions</div>
+                <div id="transactionsContainer"></div>
+            </div>
+
+            <div class="section danger-zone">
+                <button class="btn-warning" id="archiveBtn">Archive Customer</button>
+                <button class="btn-danger" id="deleteBtn">Delete Customer</button>
+            </div>
+        </div>
+    </main>
 
     <!-- Add Customer Modal -->
     <div id="addCustomerModal" class="modal">
@@ -707,8 +620,8 @@
                     <textarea id="customerNotes"></textarea>
                 </div>
                 <div class="modal-buttons">
-                    <button type="submit" class="btn-success">Add Customer</button>
-                    <button type="button" class="btn-danger" id="closeAddModal">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Customer</button>
+                    <button type="button" class="btn-secondary" id="closeAddModal">Cancel</button>
                 </div>
             </form>
         </div>
@@ -718,11 +631,7 @@
     <div id="voiceModal" class="modal">
         <div class="modal-content">
             <div class="modal-title">Voice Input</div>
-            <div class="form-label">Say: "Customer Name Amount"</div>
-            <div style="margin: 16px 0;">e.g., "Ramesh 100"</div>
-            <div id="voiceStatus"></div>
-            <div id="voiceParsed"></div>
-            <button class="btn-danger" id="closeVoiceModal" style="margin-top: 20px; width: 100%;">Close</button>
+            <div id="voiceContent"></div>
         </div>
     </div>
 
@@ -732,9 +641,30 @@
             <div class="modal-title" id="confirmTitle"></div>
             <p id="confirmMessage" style="margin-bottom: 24px; color: #6b7280;"></p>
             <div class="modal-buttons">
-                <button type="button" class="btn-danger" id="confirmYes">Confirm</button>
-                <button type="button" style="background-color: #d1d5db; color: #1f2937;" id="confirmNo">Cancel</button>
+                <button type="button" class="btn-danger" id="confirmYes">Delete</button>
+                <button type="button" class="btn-secondary" id="confirmNo">Cancel</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Customer Modal -->
+    <div id="editCustomerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Edit Customer</div>
+            <form id="editCustomerForm">
+                <div class="form-group">
+                    <label class="form-label">Customer Name *</label>
+                    <input type="text" id="editCustomerName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Notes</label>
+                    <textarea id="editCustomerNotes"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <button type="button" class="btn-secondary" id="closeEditModal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -749,92 +679,25 @@
         };
 
         let db = null;
-        let currentShopId = null;
-        let currentShopName = null;
-        let currentPhone = null;
+        let isFirebaseReady = false;
 
+        // Initialize Firebase - Using a public database
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
+        isFirebaseReady = true;
 
-        // ==================== VOICE PARSER ====================
-        const VoiceParser = {
-            parse(input) {
-                const trimmed = input.trim();
-                const parts = trimmed.split(/\s+/);
-
-                if (parts.length < 2) {
-                    return { error: 'Say customer name and amount' };
-                }
-
-                const amount = parts[parts.length - 1];
-                const name = parts.slice(0, -1).join(' ');
-
-                const numAmount = parseFloat(amount);
-                if (isNaN(numAmount) || numAmount <= 0) {
-                    return { error: 'Invalid amount' };
-                }
-
-                return {
-                    name: name.trim(),
-                    amount: numAmount,
-                    error: null
-                };
-            }
-        };
-
-        // ==================== AUTHENTICATION ====================
-        class Auth {
-            static async signup(phone, shopName, pin) {
-                if (phone.length !== 10) {
-                    throw new Error('Phone number must be 10 digits');
-                }
-                if (pin.length !== 4 || isNaN(pin)) {
-                    throw new Error('PIN must be 4 digits');
-                }
-
-                const snapshot = await db.ref('shops').orderByChild('phone').equalTo(phone).once('value');
-                if (snapshot.exists()) {
-                    throw new Error('This phone number is already registered');
-                }
-
-                const shopId = phone + '_' + Date.now();
-                await db.ref('shops/' + shopId).set({
-                    id: shopId,
-                    phone: phone,
-                    name: shopName,
-                    pin: pin,
-                    created_at: new Date().toISOString()
-                });
-
-                return { shopId, phone, shopName };
-            }
-
-            static async login(phone, pin) {
-                if (phone.length !== 10) {
-                    throw new Error('Phone number must be 10 digits');
-                }
-
-                const snapshot = await db.ref('shops').orderByChild('phone').equalTo(phone).once('value');
-                if (!snapshot.exists()) {
-                    throw new Error('Shop not found. Please create account first');
-                }
-
-                const shops = snapshot.val();
-                const shop = Object.values(shops)[0];
-
-                if (shop.pin !== pin) {
-                    throw new Error('Invalid PIN');
-                }
-
-                return { shopId: shop.id, phone: shop.phone, shopName: shop.name };
-            }
-        }
-
-        // ==================== DATA MANAGER ====================
+        // ==================== DATA MANAGEMENT ====================
         const DataManager = {
             getCustomers(callback) {
-                const customersRef = db.ref('shops/' + currentShopId + '/customers');
-                customersRef.on('value', (snapshot) => {
+                db.ref('customers').on('value', (snapshot) => {
+                    const data = snapshot.val();
+                    const customers = data ? Object.values(data) : [];
+                    callback(customers.filter(c => c.status === 'active'));
+                });
+            },
+
+            getAllCustomers(callback) {
+                db.ref('customers').once('value', (snapshot) => {
                     const data = snapshot.val();
                     const customers = data ? Object.values(data) : [];
                     callback(customers);
@@ -843,17 +706,38 @@
 
             addCustomer(name, notes = '') {
                 const id = Date.now().toString();
-                db.ref('shops/' + currentShopId + '/customers/' + id).set({
+                db.ref('customers/' + id).set({
                     id: id,
                     name: name.trim(),
                     notes: notes.trim(),
+                    status: 'active',
                     created_at: new Date().toISOString()
                 });
             },
 
+            updateCustomer(id, name, notes) {
+                db.ref('customers/' + id).update({
+                    name: name.trim(),
+                    notes: notes.trim()
+                });
+            },
+
+            deleteCustomer(id) {
+                db.ref('customers/' + id).remove();
+                db.ref('transactions').orderByChild('customer_id').equalTo(id).once('value', (snapshot) => {
+                    snapshot.forEach((child) => {
+                        child.ref.remove();
+                    });
+                });
+            },
+
+            archiveCustomer(id) {
+                db.ref('customers/' + id).update({ status: 'archived' });
+            },
+
             addTransaction(customerId, amount, type) {
                 const id = Date.now().toString();
-                db.ref('shops/' + currentShopId + '/transactions/' + id).set({
+                db.ref('transactions/' + id).set({
                     id: id,
                     customer_id: customerId,
                     amount: parseFloat(amount),
@@ -863,12 +747,11 @@
             },
 
             deleteTransaction(transactionId) {
-                db.ref('shops/' + currentShopId + '/transactions/' + transactionId).remove();
+                db.ref('transactions/' + transactionId).remove();
             },
 
             getCustomerBalance(customerId, callback) {
-                const transRef = db.ref('shops/' + currentShopId + '/transactions');
-                transRef.on('value', (snapshot) => {
+                db.ref('transactions').on('value', (snapshot) => {
                     const data = snapshot.val();
                     const transactions = data ? Object.values(data).filter(t => t.customer_id === customerId) : [];
 
@@ -878,7 +761,7 @@
                     transactions.forEach(t => {
                         if (t.type === 'debit') {
                             totalDebit += t.amount;
-                        } else {
+                        } else if (t.type === 'payment') {
                             totalPayment += t.amount;
                         }
                     });
@@ -892,8 +775,7 @@
             },
 
             getCustomerTransactions(customerId, callback) {
-                const transRef = db.ref('shops/' + currentShopId + '/transactions');
-                transRef.on('value', (snapshot) => {
+                db.ref('transactions').on('value', (snapshot) => {
                     const data = snapshot.val();
                     const transactions = data ? Object.values(data).filter(t => t.customer_id === customerId) : [];
                     const sorted = transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -902,146 +784,60 @@
             }
         };
 
-        // ==================== UI MANAGER ====================
+        // ==================== VOICE PARSER ====================
+        const VoiceParser = {
+            parse(input) {
+                const trimmed = input.trim();
+                const parts = trimmed.split(/\s+/);
+
+                if (parts.length < 2) {
+                    return { error: 'Please say customer name and amount. Example: "Ramesh 20"' };
+                }
+
+                const amount = parts[parts.length - 1];
+                const name = parts.slice(0, -1).join(' ');
+
+                const numAmount = parseFloat(amount);
+                if (isNaN(numAmount) || numAmount <= 0) {
+                    return { error: 'Amount must be a valid number' };
+                }
+
+                return {
+                    name: name.trim(),
+                    amount: numAmount,
+                    error: null
+                };
+            }
+        };
+
+        // ==================== UI MANAGEMENT ====================
         class UIManager {
             constructor() {
-                this.setupAuthListeners();
+                this.currentCustomerId = null;
+                this.setupEventListeners();
             }
 
-            setupAuthListeners() {
-                document.getElementById('toggleSignup').addEventListener('click', () => this.toggleForm());
-                document.getElementById('toggleLogin').addEventListener('click', () => this.toggleForm());
-                document.getElementById('loginBtn').addEventListener('click', () => this.handleLogin());
-                document.getElementById('signupBtn').addEventListener('click', () => this.handleSignup());
-
-                document.getElementById('phoneNumber').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') this.handleLogin();
-                });
-                document.getElementById('loginPin').addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') this.handleLogin();
-                });
-
-                document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+            setupEventListeners() {
                 document.getElementById('addCustomerBtn').addEventListener('click', () => this.showAddCustomerModal());
+                document.getElementById('voiceBtn').addEventListener('click', () => this.showVoiceModal());
                 document.getElementById('closeAddModal').addEventListener('click', () => this.closeModal('addCustomerModal'));
                 document.getElementById('addCustomerForm').addEventListener('submit', (e) => this.handleAddCustomer(e));
-                document.getElementById('voiceBtn').addEventListener('click', () => this.showVoiceModal());
-                document.getElementById('closeVoiceModal').addEventListener('click', () => this.closeModal('voiceModal'));
                 document.getElementById('backBtn').addEventListener('click', () => this.showDashboard());
                 document.getElementById('paymentForm').addEventListener('submit', (e) => this.handlePayment(e));
+                document.getElementById('archiveBtn').addEventListener('click', () => this.showArchiveConfirm());
+                document.getElementById('deleteBtn').addEventListener('click', () => this.showDeleteConfirm());
+                document.getElementById('editCustomerBtn').addEventListener('click', () => this.showEditCustomerModal());
+                document.getElementById('closeEditModal').addEventListener('click', () => this.closeModal('editCustomerModal'));
+                document.getElementById('editCustomerForm').addEventListener('submit', (e) => this.handleEditCustomer(e));
                 document.getElementById('confirmNo').addEventListener('click', () => this.closeModal('confirmModal'));
-            }
-
-            toggleForm() {
-                document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
-                document.getElementById('signupForm').style.display = document.getElementById('signupForm').style.display === 'none' ? 'block' : 'none';
-                this.clearErrors();
-            }
-
-            clearErrors() {
-                document.getElementById('loginError').style.display = 'none';
-                document.getElementById('loginSuccess').style.display = 'none';
-            }
-
-            showError(message) {
-                document.getElementById('loginError').textContent = message;
-                document.getElementById('loginError').style.display = 'block';
-            }
-
-            showSuccess(message) {
-                document.getElementById('loginSuccess').textContent = message;
-                document.getElementById('loginSuccess').style.display = 'block';
-            }
-
-            async handleLogin() {
-                this.clearErrors();
-                const phone = document.getElementById('phoneNumber').value;
-                const pin = document.getElementById('loginPin').value;
-
-                if (!phone || !pin) {
-                    this.showError('Please enter phone and PIN');
-                    return;
-                }
-
-                try {
-                    const result = await Auth.login(phone, pin);
-                    currentShopId = result.shopId;
-                    currentShopName = result.shopName;
-                    currentPhone = result.phone;
-
-                    this.showApp();
-                } catch (error) {
-                    this.showError(error.message);
-                }
-            }
-
-            async handleSignup() {
-                this.clearErrors();
-                const phone = document.getElementById('signupPhone').value;
-                const shopName = document.getElementById('shopName').value;
-                const pin = document.getElementById('signupPin').value;
-                const confirmPin = document.getElementById('confirmPin').value;
-
-                if (!phone || !shopName || !pin || !confirmPin) {
-                    this.showError('Please fill all fields');
-                    return;
-                }
-
-                if (pin !== confirmPin) {
-                    this.showError('PINs do not match');
-                    return;
-                }
-
-                try {
-                    const result = await Auth.signup(phone, shopName, pin);
-                    currentShopId = result.shopId;
-                    currentShopName = result.shopName;
-                    currentPhone = result.phone;
-
-                    this.showSuccess('Account created! Logging in...');
-                    setTimeout(() => this.showApp(), 1500);
-                } catch (error) {
-                    this.showError(error.message);
-                }
-            }
-
-            showApp() {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('appScreen').style.display = 'block';
-
-                document.getElementById('shopNameDisplay').textContent = currentShopName;
-                document.getElementById('phoneDisplay').textContent = '📱 ' + currentPhone;
-
-                this.renderDashboard();
-            }
-
-            logout() {
-                currentShopId = null;
-                currentShopName = null;
-                currentPhone = null;
-
-                document.getElementById('appScreen').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
-
-                document.getElementById('phoneNumber').value = '';
-                document.getElementById('loginPin').value = '';
-                document.getElementById('signupPhone').value = '';
-                document.getElementById('shopName').value = '';
-                document.getElementById('signupPin').value = '';
-                document.getElementById('confirmPin').value = '';
-
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('signupForm').style.display = 'none';
-
-                this.clearErrors();
-            }
-
-            closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
             }
 
             showModal(modalId) {
                 document.getElementById(modalId).classList.add('active');
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
             }
 
             showAddCustomerModal() {
@@ -1057,7 +853,7 @@
                 const notes = document.getElementById('customerNotes').value;
 
                 if (!name.trim()) {
-                    alert('Enter customer name');
+                    alert('Please enter customer name');
                     return;
                 }
 
@@ -1065,21 +861,144 @@
                 this.closeModal('addCustomerModal');
             }
 
+            showVoiceModal() {
+                this.closeModal('addCustomerModal');
+                const voiceContent = document.getElementById('voiceContent');
+                voiceContent.innerHTML = `
+                    <div class="voice-hint">Say: "Customer Name Amount" (e.g., "Ramesh 100")</div>
+                    <div id="voiceStatus"></div>
+                    <div id="voiceParsed"></div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-secondary" id="closeVoiceModal">Close</button>
+                    </div>
+                `;
+
+                this.showModal('voiceModal');
+                document.getElementById('closeVoiceModal').addEventListener('click', () => this.closeModal('voiceModal'));
+
+                this.startVoiceRecognition();
+            }
+
+            startVoiceRecognition() {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognition) {
+                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px;">Voice not supported in this browser. Please use Chrome, Edge, or Safari.</p>';
+                    return;
+                }
+
+                const recognition = new SpeechRecognition();
+                recognition.language = 'en-IN';
+                recognition.continuous = true;
+                recognition.interimResults = false;
+
+                document.getElementById('voiceStatus').innerHTML = '<p style="color: #2563eb; padding: 12px;"><span class="listening-indicator"></span>Listening...</p>';
+
+                recognition.onresult = (event) => {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            transcript += event.results[i][0].transcript;
+                        }
+                    }
+
+                    if (transcript.trim()) {
+                        this.parseVoiceInput(transcript.trim());
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    document.getElementById('voiceStatus').innerHTML = `<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px;">Error: ${event.error}</p>`;
+                };
+
+                recognition.onend = () => {
+                    setTimeout(() => {
+                        recognition.start();
+                    }, 100);
+                };
+
+                recognition.start();
+            }
+
+            parseVoiceInput(input) {
+                const result = VoiceParser.parse(input);
+
+                if (result.error) {
+                    document.getElementById('voiceParsed').innerHTML = `<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px; margin-top: 16px;">${result.error}</p>`;
+                    return;
+                }
+
+                document.getElementById('voiceStatus').innerHTML = '';
+
+                // Show in green with YES/NO
+                document.getElementById('voiceParsed').innerHTML = `
+                    <div class="parsed-result">
+                        <div class="parsed-label">Confirm transaction:</div>
+                        <div class="parsed-content">
+                            <div class="parsed-name">${result.name}</div>
+                            <div class="parsed-amount">₹${result.amount}</div>
+                        </div>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn-success" id="confirmVoiceYes">✓ YES</button>
+                        <button type="button" class="btn-secondary" id="confirmVoiceNo">✗ NO</button>
+                    </div>
+                `;
+
+                document.getElementById('confirmVoiceYes').addEventListener('click', () => this.confirmVoiceTransaction(result));
+                document.getElementById('confirmVoiceNo').addEventListener('click', () => {
+                    document.getElementById('voiceParsed').innerHTML = '';
+                });
+            }
+
+            confirmVoiceTransaction(parsed) {
+                DataManager.getAllCustomers((customers) => {
+                    let customerId = customers.find(c => c.name.toLowerCase() === parsed.name.toLowerCase())?.id;
+
+                    if (!customerId) {
+                        const confirmed = window.confirm(`Customer "${parsed.name}" doesn't exist. Create new customer?`);
+                        if (!confirmed) return;
+
+                        customerId = Date.now().toString();
+                        DataManager.addCustomer(parsed.name, '');
+                        setTimeout(() => {
+                            DataManager.addTransaction(customerId, parsed.amount, 'debit');
+                        }, 500);
+                    } else {
+                        DataManager.addTransaction(customerId, parsed.amount, 'debit');
+                    }
+
+                    // Clear voice result
+                    document.getElementById('voiceParsed').innerHTML = '<p style="color: #10b981; padding: 12px; background: #dcfce7; border-radius: 6px; margin-top: 16px;">✓ Added ₹' + parsed.amount + ' for ' + parsed.name + '</p>';
+
+                    setTimeout(() => {
+                        document.getElementById('voiceParsed').innerHTML = '';
+                    }, 2000);
+                });
+            }
+
+            showDashboard() {
+                this.currentCustomerId = null;
+                document.getElementById('dashboardView').style.display = 'block';
+                document.getElementById('detailView').classList.remove('active');
+                this.renderDashboard();
+            }
+
             renderDashboard() {
                 DataManager.getCustomers((customers) => {
                     const container = document.getElementById('customersContainer');
 
                     if (customers.length === 0) {
-                        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 48px;">No customers. Click ➕ to add.</p>';
+                        container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #6b7280; padding: 48px 24px;">No customers yet. Add one to get started!</p>';
                         return;
                     }
 
                     container.innerHTML = customers.map(customer => {
+                        // Get balance synchronously for display
                         let balanceInfo = { balance: 0, totalDebit: 0, totalPayment: 0 };
 
                         DataManager.getCustomerBalance(customer.id, (info) => {
                             balanceInfo = info;
-                            this.updateCardDisplay(customer.id, info);
+                            this.updateCustomerCardDisplay(customer.id, info);
                         });
 
                         const balanceClass = balanceInfo.balance > 0 ? 'balance-negative' : 'balance-positive';
@@ -1104,13 +1023,10 @@
                             </div>
                         `;
                     }).join('');
-
-                    document.getElementById('dashboardView').style.display = 'block';
-                    document.getElementById('detailView').classList.remove('active');
                 });
             }
 
-            updateCardDisplay(customerId, info) {
+            updateCustomerCardDisplay(customerId, info) {
                 const debitEl = document.getElementById(`debit-${customerId}`);
                 const paidEl = document.getElementById(`paid-${customerId}`);
                 const balanceEl = document.getElementById(`balance-${customerId}`);
@@ -1124,40 +1040,47 @@
             }
 
             showCustomerDetail(customerId) {
+                this.currentCustomerId = customerId;
                 document.getElementById('dashboardView').style.display = 'none';
                 document.getElementById('detailView').classList.add('active');
-                this.renderCustomerDetail(customerId);
+                this.renderCustomerDetail();
             }
 
-            renderCustomerDetail(customerId) {
-                DataManager.getCustomers((customers) => {
-                    const customer = customers.find(c => c.id === customerId);
+            renderCustomerDetail() {
+                DataManager.getAllCustomers((customers) => {
+                    const customer = customers.find(c => c.id === this.currentCustomerId);
                     if (!customer) return;
 
                     document.getElementById('detailCustomerTitle').textContent = customer.name;
+                    document.getElementById('detailCustomerNotes').textContent = customer.notes || '';
 
                     DataManager.getCustomerBalance(customer.id, (balance) => {
+                        const cardClass = balance.balance > 5000 ? 'warning' : '';
                         document.getElementById('detailBalanceCard').innerHTML = `
-                            <div style="font-size: 14px; opacity: 0.9; margin-bottom: 8px;">Current Balance</div>
+                            <div class="balance-label">Current Balance</div>
                             <div class="balance-amount">₹${balance.balance}</div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; font-size: 14px;">
+                            <div class="balance-breakdown">
                                 <div>
-                                    <div style="opacity: 0.7;">Total Debit</div>
-                                    <div style="font-size: 18px; font-weight: 600; margin-top: 4px;">₹${balance.totalDebit}</div>
+                                    <div class="breakdown-label">Total Debit</div>
+                                    <div class="breakdown-value">₹${balance.totalDebit}</div>
                                 </div>
                                 <div>
-                                    <div style="opacity: 0.7;">Total Paid</div>
-                                    <div style="font-size: 18px; font-weight: 600; margin-top: 4px;">₹${balance.totalPayment}</div>
+                                    <div class="breakdown-label">Total Paid</div>
+                                    <div class="breakdown-value">₹${balance.totalPayment}</div>
                                 </div>
                             </div>
                         `;
+
+                        if (cardClass) {
+                            document.getElementById('detailBalanceCard').className = 'balance-card ' + cardClass;
+                        }
                     });
 
-                    DataManager.getCustomerTransactions(customerId, (transactions) => {
+                    DataManager.getCustomerTransactions(customer.id, (transactions) => {
                         const container = document.getElementById('transactionsContainer');
 
                         if (transactions.length === 0) {
-                            container.innerHTML = '<div class="empty-message">No transactions</div>';
+                            container.innerHTML = '<div class="empty-message">No transactions yet</div>';
                             return;
                         }
 
@@ -1171,11 +1094,11 @@
                                 <div class="transaction-item">
                                     <div>
                                         <div class="transaction-date">${date}</div>
-                                        <div style="color: #6b7280; font-size: 12px; margin-top: 2px;">${typeLabel}</div>
+                                        <div class="transaction-type">${typeLabel}</div>
                                     </div>
                                     <div style="display: flex; align-items: center; gap: 12px;">
                                         <div class="transaction-amount ${typeClass}">${sign}₹${t.amount}</div>
-                                        <button onclick="app.deleteTransaction('${t.id}')" style="background: none; border: none; cursor: pointer; font-size: 18px; color: #ef4444;">❌</button>
+                                        <button class="transaction-delete" onclick="app.confirmDeleteTransaction('${t.id}')">❌</button>
                                     </div>
                                 </div>
                             `;
@@ -1184,143 +1107,112 @@
                 });
             }
 
-            showDashboard() {
-                document.getElementById('dashboardView').style.display = 'block';
-                document.getElementById('detailView').classList.remove('active');
-                this.renderDashboard();
-            }
-
             handlePayment(e) {
                 e.preventDefault();
-                const customerId = document.getElementById('detailView').dataset.customerId;
                 const amount = parseFloat(document.getElementById('paymentAmount').value);
 
                 if (isNaN(amount) || amount <= 0) {
-                    alert('Enter valid amount');
+                    alert('Please enter a valid amount');
                     return;
                 }
 
-                DataManager.addTransaction(customerId, amount, 'payment');
-                document.getElementById('paymentAmount').value = '';
-                this.renderCustomerDetail(customerId);
-            }
-
-            showVoiceModal() {
-                document.getElementById('voiceStatus').innerHTML = '<p style="color: #2563eb;"><span class="listening-indicator"></span>Listening...</p>';
-                document.getElementById('voiceParsed').innerHTML = '';
-                this.showModal('voiceModal');
-
-                this.startVoiceRecognition();
-            }
-
-            startVoiceRecognition() {
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                if (!SpeechRecognition) {
-                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626;">Voice not supported</p>';
-                    return;
-                }
-
-                const recognition = new SpeechRecognition();
-                recognition.language = 'en-IN';
-                recognition.continuous = true;
-
-                recognition.onresult = (event) => {
-                    let transcript = '';
-                    for (let i = event.resultIndex; i < event.results.length; i++) {
-                        if (event.results[i].isFinal) {
-                            transcript += event.results[i][0].transcript;
-                        }
+                DataManager.getCustomerBalance(this.currentCustomerId, (balance) => {
+                    if (amount > balance.balance) {
+                        alert(`Cannot add payment more than outstanding balance of ₹${balance.balance}`);
+                        return;
                     }
 
-                    if (transcript.trim()) {
-                        this.parseVoiceInput(transcript.trim());
-                    }
-                };
-
-                recognition.onerror = () => {
-                    document.getElementById('voiceStatus').innerHTML = '<p style="color: #dc2626;">Mic error</p>';
-                };
-
-                recognition.onend = () => setTimeout(() => recognition.start(), 100);
-                recognition.start();
-            }
-
-            parseVoiceInput(input) {
-                const result = VoiceParser.parse(input);
-
-                if (result.error) {
-                    document.getElementById('voiceParsed').innerHTML = `<p style="color: #dc2626; padding: 12px; background: #fee2e2; border-radius: 6px;">${result.error}</p>`;
-                    return;
-                }
-
-                document.getElementById('voiceStatus').innerHTML = '';
-
-                document.getElementById('voiceParsed').innerHTML = `
-                    <div class="parsed-result">
-                        <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">Confirm:</div>
-                        <div class="parsed-content">
-                            <div class="parsed-name">${result.name}</div>
-                            <div class="parsed-amount">₹${result.amount}</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 12px;">
-                        <button onclick="app.confirmVoice('${result.name}', ${result.amount})" class="btn-success" style="flex: 1; padding: 10px;">✓ YES</button>
-                        <button onclick="document.getElementById('voiceParsed').innerHTML = ''" class="btn-danger" style="flex: 1; padding: 10px; background-color: #9ca3af; color: white;">✗ NO</button>
-                    </div>
-                `;
-            }
-
-            confirmVoice(name, amount) {
-                DataManager.getCustomers((customers) => {
-                    let customerId = customers.find(c => c.name.toLowerCase() === name.toLowerCase())?.id;
-
-                    if (!customerId) {
-                        const confirmed = window.confirm(`"${name}" not found. Create customer?`);
-                        if (!confirmed) return;
-
-                        customerId = Date.now().toString();
-                        DataManager.addCustomer(name, '');
-                        setTimeout(() => DataManager.addTransaction(customerId, amount, 'debit'), 500);
-                    } else {
-                        DataManager.addTransaction(customerId, amount, 'debit');
-                    }
-
-                    document.getElementById('voiceParsed').innerHTML = `<p style="color: #10b981; padding: 12px; background: #dcfce7; border-radius: 6px;">✓ Added ₹${amount}</p>`;
-
-                    setTimeout(() => {
-                        document.getElementById('voiceParsed').innerHTML = '';
-                    }, 1500);
+                    DataManager.addTransaction(this.currentCustomerId, amount, 'payment');
+                    document.getElementById('paymentAmount').value = '';
                 });
             }
 
-            deleteTransaction(transactionId) {
+            showArchiveConfirm() {
+                DataManager.getAllCustomers((customers) => {
+                    const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                    document.getElementById('confirmTitle').textContent = 'Archive Customer?';
+                    document.getElementById('confirmMessage').textContent = `${customer.name} will be hidden from the dashboard.`;
+                    document.getElementById('confirmYes').textContent = 'Archive';
+                    document.getElementById('confirmYes').className = 'btn-warning';
+                    document.getElementById('confirmYes').onclick = () => this.archiveCustomer();
+
+                    this.showModal('confirmModal');
+                });
+            }
+
+            archiveCustomer() {
+                DataManager.archiveCustomer(this.currentCustomerId);
+                this.closeModal('confirmModal');
+                this.showDashboard();
+            }
+
+            showDeleteConfirm() {
+                DataManager.getAllCustomers((customers) => {
+                    const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                    document.getElementById('confirmTitle').textContent = 'Delete Customer?';
+                    document.getElementById('confirmMessage').textContent = `Are you sure you want to delete ${customer.name}? This will delete all transactions.`;
+                    document.getElementById('confirmYes').textContent = 'Delete';
+                    document.getElementById('confirmYes').className = 'btn-danger';
+                    document.getElementById('confirmYes').onclick = () => this.deleteCustomer();
+
+                    this.showModal('confirmModal');
+                });
+            }
+
+            deleteCustomer() {
+                DataManager.deleteCustomer(this.currentCustomerId);
+                this.closeModal('confirmModal');
+                this.showDashboard();
+            }
+
+            showEditCustomerModal() {
+                DataManager.getAllCustomers((customers) => {
+                    const customer = customers.find(c => c.id === this.currentCustomerId);
+
+                    document.getElementById('editCustomerName').value = customer.name;
+                    document.getElementById('editCustomerNotes').value = customer.notes;
+                    this.showModal('editCustomerModal');
+                    document.getElementById('editCustomerName').focus();
+                });
+            }
+
+            handleEditCustomer(e) {
+                e.preventDefault();
+                const name = document.getElementById('editCustomerName').value;
+                const notes = document.getElementById('editCustomerNotes').value;
+
+                if (!name.trim()) {
+                    alert('Customer name cannot be empty');
+                    return;
+                }
+
+                DataManager.updateCustomer(this.currentCustomerId, name, notes);
+                this.closeModal('editCustomerModal');
+                this.renderCustomerDetail();
+            }
+
+            confirmDeleteTransaction(transactionId) {
                 document.getElementById('confirmTitle').textContent = 'Delete Transaction?';
-                document.getElementById('confirmMessage').textContent = 'Are you sure?';
+                document.getElementById('confirmMessage').textContent = 'Are you sure you want to delete this transaction?';
                 document.getElementById('confirmYes').textContent = 'Delete';
-                document.getElementById('confirmYes').onclick = () => {
-                    DataManager.deleteTransaction(transactionId);
-                    const customerId = document.getElementById('detailView').dataset.customerId;
-                    this.closeModal('confirmModal');
-                    this.renderCustomerDetail(customerId);
-                };
+                document.getElementById('confirmYes').className = 'btn-danger';
+                document.getElementById('confirmYes').onclick = () => this.deleteTransaction(transactionId);
 
                 this.showModal('confirmModal');
             }
 
-            showCustomerDetail(customerId) {
-                document.getElementById('detailView').dataset.customerId = customerId;
-                document.getElementById('dashboardView').style.display = 'none';
-                document.getElementById('detailView').classList.add('active');
-                this.renderCustomerDetail(customerId);
+            deleteTransaction(transactionId) {
+                DataManager.deleteTransaction(transactionId);
+                this.closeModal('confirmModal');
+                this.renderCustomerDetail();
             }
         }
 
         // ==================== INITIALIZE ====================
         const app = new UIManager();
+        app.renderDashboard();
     </script>
 </body>
 </html>
-
-
-
-
