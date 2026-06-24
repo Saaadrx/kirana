@@ -4,216 +4,270 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kirana Ledger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* ── RESET & BASE ── */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f4f8; color: #1a1a2e; font-size: 18px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f7f7f5;
+            color: #1c1c1e;
+            font-size: 17px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* ── COLOUR TOKENS ── */
+        /* ink: #1c1c1e  |  muted: #6e6e73  |  rule: #e8e8e3  |  surface: #fff  |  bg: #f7f7f5 */
+        /* accent blue: #2563eb  |  green: #16a34a  |  red: #dc2626  |  amber: #d97706 */
 
         /* ── PIN SCREEN ── */
-        #pinScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3a5f 0%, #2d6a4f 100%); padding: 20px; }
-        .pin-card { background: white; border-radius: 24px; padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: 0 30px 60px rgba(0,0,0,0.35); text-align: center; }
-        .pin-logo { font-size: 64px; margin-bottom: 12px; }
-        .pin-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #1a1a2e; }
-        .pin-subtitle { font-size: 18px; color: #6b7280; margin-bottom: 32px; }
+        #pinScreen {
+            min-height: 100vh; display: flex; align-items: center;
+            justify-content: center; padding: 24px;
+            background: #1c1c1e;
+        }
+        .pin-card {
+            background: #fff; border-radius: 20px; padding: 52px 44px;
+            width: 100%; max-width: 380px; text-align: center;
+        }
+        .pin-logo { font-size: 52px; margin-bottom: 16px; }
+        .pin-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
+        .pin-subtitle { font-size: 15px; color: #6e6e73; margin-bottom: 32px; }
         #pinInput {
-            width: 100%; padding: 20px 16px;
-            font-size: 36px; letter-spacing: 16px; text-align: center;
-            border: 3px solid #d1d5db; border-radius: 14px;
-            font-family: monospace; outline: none; margin-bottom: 14px;
-            display: block;
+            width: 100%; padding: 18px 12px;
+            font-size: 32px; letter-spacing: 14px; text-align: center;
+            border: 1.5px solid #e8e8e3; border-radius: 12px;
+            font-family: monospace; outline: none; margin-bottom: 12px;
+            color: #1c1c1e; background: #f7f7f5;
         }
-        #pinInput:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59,130,246,0.15); }
-        #pinInput.pin-error { border-color: #ef4444; animation: shake 0.4s ease; }
-        @keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
-        .pin-error-msg { color: #ef4444; font-size: 17px; min-height: 26px; margin-bottom: 14px; font-weight: 700; }
+        #pinInput:focus { border-color: #2563eb; background: #fff; }
+        #pinInput.pin-error { border-color: #dc2626; animation: shake 0.35s ease; }
+        @keyframes shake { 0%,100%{transform:translateX(0)} 25%,75%{transform:translateX(-6px)} 50%{transform:translateX(6px)} }
+        .pin-error-msg { color: #dc2626; font-size: 14px; min-height: 20px; margin-bottom: 12px; font-weight: 500; }
         #pinEnterBtn {
-            width: 100%; padding: 22px; background: #3b82f6; color: white;
-            font-size: 22px; font-weight: 800; border: none; border-radius: 14px;
-            cursor: pointer; display: block;
+            width: 100%; padding: 18px; background: #1c1c1e; color: #fff;
+            font-size: 17px; font-weight: 600; border: none; border-radius: 12px;
+            cursor: pointer; font-family: inherit;
         }
-        #pinEnterBtn:hover { background: #2563eb; }
-        #pinEnterBtn:disabled { background: #93c5fd; }
-        .pin-hint { margin-top: 18px; font-size: 15px; color: #9ca3af; }
-        .spinner { width: 18px; height: 18px; border: 3px solid #ffffff44; border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 8px; }
+        #pinEnterBtn:hover { background: #333; }
+        #pinEnterBtn:disabled { background: #aaa; }
+        .pin-hint { margin-top: 16px; font-size: 13px; color: #aaa; }
+        .spinner {
+            width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff; border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block; vertical-align: middle; margin-right: 6px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── APP ── */
+        /* ── APP SHELL ── */
         #appWrapper { display: none; }
 
         /* ── HEADER ── */
-        header { background: white; border-bottom: 2px solid #e5e7eb; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .header-content { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
-        h1 { font-size: 26px; font-weight: 800; }
-        .sync-dot { width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block; margin-left: 10px; }
-        .sync-dot.syncing { background: #f59e0b; animation: pulse 1s infinite; }
-        .sync-dot.offline { background: #ef4444; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-        .btn-logout { background: none; border: 2px solid #d1d5db; color: #6b7280; font-size: 16px; padding: 12px 18px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-        .btn-logout:hover { background: #f3f4f6; }
+        header {
+            background: #fff; border-bottom: 1px solid #e8e8e3;
+            position: sticky; top: 0; z-index: 10;
+        }
+        .header-content {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 0;
+        }
+        .header-title { font-size: 20px; font-weight: 700; letter-spacing: -0.2px; display: flex; align-items: center; gap: 8px; }
+        .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #16a34a; flex-shrink: 0; }
+        .sync-dot.syncing { background: #d97706; animation: pulse 1.2s infinite; }
+        .sync-dot.offline  { background: #dc2626; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+        .btn-lock {
+            font-family: inherit; font-size: 14px; font-weight: 500; color: #6e6e73;
+            background: none; border: 1px solid #e8e8e3; border-radius: 8px;
+            padding: 9px 14px; cursor: pointer;
+        }
+        .btn-lock:hover { background: #f7f7f5; }
 
-        /* ── BIG ACTION BUTTONS (visiting-card size) ── */
-        .action-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+        /* ── ACTION BAR ── */
+        .action-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 24px 0; }
         .action-card {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 10px; padding: 28px 16px;
-            border: none; border-radius: 20px; cursor: pointer;
-            font-weight: 800; font-size: 22px; color: white;
-            min-height: 120px;
-            transition: transform 0.12s, box-shadow 0.12s;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            gap: 10px; min-height: 110px; border: none; border-radius: 16px;
+            cursor: pointer; font-family: inherit; font-weight: 600; font-size: 17px;
+            transition: opacity 0.15s, transform 0.12s;
         }
-        .action-card:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-        .action-card-icon { font-size: 40px; line-height: 1; }
-        .action-card-voice { background: linear-gradient(135deg, #dc2626, #991b1b); }
-        .action-card-add   { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+        .action-card:active { transform: scale(0.97); opacity: 0.85; }
+        .action-icon { font-size: 34px; line-height: 1; }
+        .action-card-voice { background: #1c1c1e; color: #fff; }
+        .action-card-add   { background: #2563eb; color: #fff; }
 
         /* ── GENERAL BUTTONS ── */
-        button { border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 18px; padding: 14px 20px; transition: transform 0.1s; }
-        button:active { transform: scale(0.97); }
-        .btn-primary  { background: #3b82f6; color: white; }
-        .btn-primary:hover  { background: #2563eb; }
-        .btn-success  { background: #059669; color: white; padding: 16px 22px; }
-        .btn-success:hover  { background: #047857; }
-        .btn-warning  { background: #d97706; color: white; padding: 16px 22px; }
-        .btn-warning:hover  { background: #b45309; }
-        .btn-danger   { background: #dc2626; color: white; padding: 16px 22px; }
-        .btn-danger:hover   { background: #b91c1c; }
-        .btn-secondary { background: #e5e7eb; color: #374151; padding: 16px 22px; }
-        .btn-secondary:hover { background: #d1d5db; }
+        button { font-family: inherit; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; font-size: 16px; padding: 13px 18px; transition: opacity 0.15s; }
+        button:active { opacity: 0.75; }
+        .btn-primary   { background: #2563eb; color: #fff; }
+        .btn-success   { background: #16a34a; color: #fff; }
+        .btn-warning   { background: #d97706; color: #fff; }
+        .btn-danger    { background: #dc2626; color: #fff; }
+        .btn-secondary { background: #f0f0ed; color: #1c1c1e; }
 
         /* ── MAIN ── */
-        main { padding: 0 0 40px; }
+        main { padding-bottom: 48px; }
 
         /* ── CUSTOMER CARDS ── */
-        .customers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .customer-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px; cursor: pointer; transition: all 0.2s; }
-        .customer-card:hover, .customer-card:active { box-shadow: 0 12px 30px rgba(0,0,0,0.12); transform: translateY(-3px); border-color: #3b82f6; }
-        .customer-name { font-size: 22px; font-weight: 800; margin-bottom: 18px; color: #1a1a2e; }
-        .customer-stats { display: flex; flex-direction: column; gap: 10px; }
-        .stat-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 17px; }
-        .stat-label { color: #6b7280; font-weight: 600; }
-        .stat-value { font-weight: 700; font-size: 18px; }
-        .balance-line { border-top: 2px solid #e5e7eb; padding-top: 14px; margin-top: 8px; font-size: 20px; font-weight: 800; }
-        .balance-positive { color: #059669; }
-        .balance-negative { color: #dc2626; }
+        .customers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+        .customer-card {
+            background: #fff; border: 1px solid #e8e8e3; border-radius: 14px;
+            padding: 22px 24px; cursor: pointer; transition: box-shadow 0.18s, border-color 0.18s;
+        }
+        .customer-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-color: #2563eb; }
+        .customer-name { font-size: 20px; font-weight: 700; margin-bottom: 14px; letter-spacing: -0.2px; }
+        .stat-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 15px; }
+        .stat-label { color: #6e6e73; }
+        .stat-value { font-weight: 600; color: #1c1c1e; }
+        .balance-row {
+            display: flex; justify-content: space-between; align-items: center;
+            border-top: 1px solid #e8e8e3; margin-top: 10px; padding-top: 12px;
+            font-size: 18px; font-weight: 700;
+        }
+        .bal-label { color: #6e6e73; font-size: 14px; font-weight: 500; }
+        .bal-positive { color: #16a34a; }
+        .bal-negative { color: #dc2626; }
 
         /* ── MODALS ── */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 50; align-items: center; justify-content: center; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; align-items: flex-end; justify-content: center; padding: 0; }
         .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 20px; padding: 32px; width: 100%; max-width: 460px; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
-        .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #1a1a2e; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-weight: 700; margin-bottom: 10px; font-size: 17px; color: #374151; }
-        input[type="text"], input[type="number"], textarea {
-            width: 100%; padding: 16px; border: 2px solid #d1d5db;
-            border-radius: 12px; font-family: inherit; font-size: 18px; box-sizing: border-box;
+        .modal-content {
+            background: #fff; border-radius: 20px 20px 0 0;
+            padding: 28px 24px 36px; width: 100%; max-width: 520px;
         }
-        input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-        textarea { resize: vertical; min-height: 90px; }
-        .modal-buttons { display: flex; gap: 14px; margin-top: 28px; }
-        .modal-buttons button { flex: 1; padding: 18px; font-size: 18px; }
+        .modal-handle { width: 36px; height: 4px; background: #e8e8e3; border-radius: 2px; margin: 0 auto 20px; }
+        .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.2px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 14px; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.4px; }
+        input[type="text"], input[type="number"], textarea {
+            width: 100%; padding: 14px 16px; border: 1.5px solid #e8e8e3;
+            border-radius: 10px; font-family: inherit; font-size: 17px;
+            background: #f7f7f5; color: #1c1c1e;
+        }
+        input:focus, textarea:focus { outline: none; border-color: #2563eb; background: #fff; }
+        textarea { resize: vertical; min-height: 80px; }
+        .modal-btns { display: flex; gap: 10px; margin-top: 24px; }
+        .modal-btns button { flex: 1; padding: 16px; font-size: 17px; }
 
         /* ── DETAIL PAGE ── */
         .detail-page { display: none; }
         .detail-page.active { display: block; }
-        .back-button { color: #3b82f6; font-weight: 700; margin-bottom: 20px; background: none; border: none; cursor: pointer; padding: 0; font-size: 20px; display: flex; align-items: center; gap: 8px; }
-        .back-button:hover { color: #2563eb; }
-        .detail-header { background: white; border-bottom: 2px solid #e5e7eb; margin: 0 -20px 28px; padding: 28px 20px; }
-        .customer-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
-        .customer-notes-text { color: #6b7280; font-size: 17px; }
-        .edit-button { color: #3b82f6; font-size: 17px; margin-top: 12px; background: none; border: 2px solid #3b82f6; cursor: pointer; padding: 10px 18px; display: inline-block; border-radius: 10px; font-weight: 700; }
-        .edit-button:hover { background: #eff6ff; }
+        .back-btn {
+            font-family: inherit; color: #2563eb; font-weight: 600; font-size: 16px;
+            background: none; border: none; cursor: pointer; padding: 20px 0 12px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .detail-name { font-size: 28px; font-weight: 700; letter-spacing: -0.4px; padding: 0 0 4px; }
+        .detail-notes { font-size: 15px; color: #6e6e73; }
+        .edit-btn {
+            font-family: inherit; font-size: 14px; font-weight: 600; color: #2563eb;
+            background: none; border: none; cursor: pointer; padding: 10px 0 0;
+            display: block;
+        }
 
-        .balance-card { background: linear-gradient(135deg, #1e40af 0%, #7c3aed 100%); color: white; padding: 28px; border-radius: 16px; margin-bottom: 24px; }
-        .balance-card.warning { background: linear-gradient(135deg, #dc2626 0%, #7c3aed 100%); }
-        .balance-label { font-size: 18px; opacity: 0.9; margin-bottom: 10px; font-weight: 600; }
-        .balance-amount { font-size: 48px; font-weight: 800; line-height: 1; }
-        .balance-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; font-size: 16px; }
-        .breakdown-label { opacity: 0.75; font-weight: 600; }
-        .breakdown-value { font-size: 22px; font-weight: 700; margin-top: 4px; }
+        /* ── BALANCE HERO ── */
+        .balance-hero {
+            background: #1c1c1e; color: #fff;
+            border-radius: 16px; padding: 28px 24px; margin: 20px 0;
+        }
+        .balance-hero.over { background: #7f1d1d; }
+        .bh-label { font-size: 13px; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 8px; }
+        .bh-amount { font-size: 44px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+        .bh-split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 16px; }
+        .bh-split-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+        .bh-split-val { font-size: 20px; font-weight: 600; }
 
-        .section { background: white; border-radius: 16px; padding: 24px; margin-bottom: 20px; border: 2px solid #e5e7eb; }
-        .section-title { font-size: 20px; font-weight: 800; margin-bottom: 18px; color: #1a1a2e; }
+        /* ── SECTION CARD ── */
+        .card { background: #fff; border: 1px solid #e8e8e3; border-radius: 14px; padding: 20px 22px; margin-bottom: 14px; }
+        .card-title { font-size: 13px; font-weight: 600; color: #6e6e73; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; }
+
+        /* ── PAYMENT ROW ── */
+        .payment-row { display: flex; gap: 10px; }
+        .payment-row input { flex: 1; font-size: 18px; }
+        .payment-row button { white-space: nowrap; padding: 14px 20px; font-size: 16px; }
 
         /* ── TRANSACTIONS ── */
-        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 12px; border-bottom: 2px solid #f3f4f6; }
-        .transaction-item:last-child { border-bottom: none; }
-        .transaction-date { font-weight: 700; font-size: 18px; }
-        .transaction-type { color: #6b7280; font-size: 15px; margin-top: 4px; font-weight: 600; }
-        .transaction-amount { font-weight: 800; font-size: 22px; }
-        .transaction-debit { color: #dc2626; }
-        .transaction-payment { color: #059669; }
-        .transaction-delete { color: #dc2626; cursor: pointer; font-size: 20px; background: #fee2e2; border: none; padding: 10px 14px; border-radius: 10px; font-weight: 700; }
-        .transaction-delete:hover { background: #fecaca; }
-        .empty-message { color: #6b7280; font-size: 18px; text-align: center; padding: 28px; font-weight: 600; }
+        .tx-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0ed; }
+        .tx-item:last-child { border-bottom: none; }
+        .tx-date { font-size: 15px; font-weight: 600; }
+        .tx-type { font-size: 13px; color: #6e6e73; margin-top: 2px; }
+        .tx-right { display: flex; align-items: center; gap: 12px; }
+        .tx-amount { font-size: 18px; font-weight: 700; }
+        .tx-debit   { color: #dc2626; }
+        .tx-payment { color: #16a34a; }
+        .tx-del { background: none; border: none; font-size: 16px; color: #aaa; cursor: pointer; padding: 6px 8px; border-radius: 6px; }
+        .tx-del:hover { background: #fee2e2; color: #dc2626; }
+        .empty-msg { color: #aaa; font-size: 15px; text-align: center; padding: 24px 0; }
 
-        /* ── PAYMENT FORM ── */
-        .payment-form { display: flex; gap: 14px; }
-        .payment-form input { flex: 1; font-size: 20px; padding: 16px; }
+        /* ── DANGER STRIP ── */
+        .danger-strip { display: flex; gap: 10px; padding-top: 4px; }
+        .danger-strip button { flex: 1; font-size: 15px; padding: 14px; }
 
-        /* ── DANGER ZONE ── */
-        .danger-zone { border-top: 2px solid #fecaca; padding-top: 24px; display: flex; flex-direction: column; gap: 14px; }
-
-        /* ── VOICE ── */
-        .listening-indicator { display: inline-block; width: 12px; height: 12px; background: #dc2626; border-radius: 50%; margin-right: 8px; animation: pulse 1s infinite; }
-        .voice-hint { background: #dbeafe; color: #1e40af; padding: 16px; border-radius: 10px; margin-bottom: 18px; font-size: 17px; border-left: 4px solid #3b82f6; font-weight: 600; }
-        .parsed-result { background: #dcfce7; border: 2px solid #059669; border-radius: 10px; padding: 20px; margin-top: 18px; }
-        .parsed-content { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
-        .parsed-name { font-size: 22px; font-weight: 800; }
-        .parsed-amount { font-size: 30px; font-weight: 800; color: #059669; }
+        /* ── VOICE MODAL ── */
+        .voice-tip { font-size: 14px; color: #6e6e73; background: #f7f7f5; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+        .voice-status { font-size: 15px; font-weight: 600; color: #2563eb; min-height: 24px; display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .mic-pulse { width: 10px; height: 10px; background: #dc2626; border-radius: 50%; animation: pulse 0.9s infinite; flex-shrink: 0; }
+        .parsed-box { background: #f0fdf4; border: 1.5px solid #16a34a; border-radius: 10px; padding: 16px 18px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .parsed-name-text { font-size: 19px; font-weight: 700; }
+        .parsed-amt-text  { font-size: 26px; font-weight: 700; color: #16a34a; }
 
         /* ── RESPONSIVE ── */
-        @media (max-width: 600px) {
-            h1 { font-size: 20px; }
-            .action-card { min-height: 100px; font-size: 20px; padding: 22px 12px; }
-            .action-card-icon { font-size: 34px; }
+        @media (max-width: 580px) {
+            .action-card { min-height: 96px; font-size: 16px; }
+            .action-icon { font-size: 28px; }
             .customers-grid { grid-template-columns: 1fr; }
-            .balance-amount { font-size: 38px; }
-            .payment-form { flex-direction: column; }
-            .payment-form button { width: 100%; }
-            .modal-buttons { flex-direction: column; }
+            .bh-amount { font-size: 36px; }
+            .payment-row { flex-direction: column; }
+            .modal-btns { flex-direction: column; }
+            .danger-strip { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<!-- PIN SCREEN -->
+<!-- ── PIN SCREEN ─────────────────────────────────────────── -->
 <div id="pinScreen">
     <div class="pin-card">
         <div class="pin-logo">🏪</div>
         <div class="pin-title">Kirana Ledger</div>
-        <div class="pin-subtitle">Enter your shop PIN</div>
+        <div class="pin-subtitle">Enter your shop PIN to continue</div>
         <input type="password" id="pinInput" maxlength="8" placeholder="••••" autocomplete="off">
         <div class="pin-error-msg" id="pinErrorMsg"></div>
-        <button id="pinEnterBtn">Enter Shop</button>
+        <button id="pinEnterBtn">Open Shop</button>
         <div class="pin-hint">All staff use the same PIN</div>
     </div>
 </div>
 
-<!-- APP -->
+<!-- ── APP ────────────────────────────────────────────────── -->
 <div id="appWrapper">
     <header>
         <div class="container">
             <div class="header-content">
-                <div>
-                    <h1>🏪 Kirana Ledger <span class="sync-dot syncing" id="syncDot"></span></h1>
+                <div class="header-title">
+                    🏪 Kirana Ledger
+                    <span class="sync-dot syncing" id="syncDot"></span>
                 </div>
-                <button class="btn-logout" id="logoutBtn">🔒 Lock</button>
+                <button class="btn-lock" id="logoutBtn">🔒 Lock</button>
             </div>
         </div>
     </header>
 
     <main class="container">
+
         <!-- DASHBOARD -->
         <div id="dashboardView">
-            <!-- Big action buttons -->
             <div class="action-bar">
                 <button class="action-card action-card-voice" id="voiceBtn">
-                    <span class="action-card-icon">🎤</span>
+                    <span class="action-icon">🎤</span>
                     Voice Entry
                 </button>
                 <button class="action-card action-card-add" id="addCustomerBtn">
-                    <span class="action-card-icon">➕</span>
+                    <span class="action-icon">＋</span>
                     Add Customer
                 </button>
             </div>
@@ -222,68 +276,92 @@
 
         <!-- DETAIL -->
         <div id="detailView" class="detail-page">
-            <button class="back-button" id="backBtn">← Back</button>
-            <div class="detail-header">
-                <div id="detailCustomerTitle" class="customer-title"></div>
-                <div id="detailCustomerNotes" class="customer-notes-text"></div>
-                <button id="editCustomerBtn" class="edit-button">✏️ Edit</button>
-            </div>
-            <div id="detailBalanceCard" class="balance-card"></div>
-            <div class="section">
-                <div class="section-title">Add Payment</div>
-                <div class="payment-form">
-                    <input type="number" id="paymentAmount" placeholder="Amount (₹)" min="1" step="1">
-                    <button class="btn-success" id="savePaymentBtn">✅ Save Payment</button>
+            <button class="back-btn" id="backBtn">‹ Back</button>
+
+            <div id="detailCustomerTitle" class="detail-name"></div>
+            <div id="detailCustomerNotes" class="detail-notes"></div>
+            <button class="edit-btn" id="editCustomerBtn">Edit details</button>
+
+            <div id="detailBalanceCard" class="balance-hero"></div>
+
+            <div class="card">
+                <div class="card-title">Record Payment</div>
+                <div class="payment-row">
+                    <input type="number" id="paymentAmount" placeholder="₹ Amount" min="1" step="1">
+                    <button class="btn-success" id="savePaymentBtn">Save</button>
                 </div>
             </div>
-            <div class="section">
-                <div class="section-title">Transactions</div>
+
+            <div class="card">
+                <div class="card-title">Transactions</div>
                 <div id="transactionsContainer"></div>
             </div>
-            <div class="section danger-zone">
-                <button class="btn-warning" id="archiveBtn">📦 Archive Customer</button>
-                <button class="btn-danger"  id="deleteBtn">🗑️ Delete Customer</button>
+
+            <div class="card danger-strip">
+                <button class="btn-warning" id="archiveBtn">Archive</button>
+                <button class="btn-danger"  id="deleteBtn">Delete</button>
             </div>
         </div>
+
     </main>
 </div>
 
-<!-- Modals -->
+<!-- ── MODALS ──────────────────────────────────────────────── -->
+
 <div id="addCustomerModal" class="modal">
     <div class="modal-content">
-        <div class="modal-title">Add New Customer</div>
-        <div class="form-group"><label class="form-label">Customer Name *</label><input type="text" id="customerName"></div>
-        <div class="form-group"><label class="form-label">Notes (optional)</label><textarea id="customerNotes"></textarea></div>
-        <div class="modal-buttons">
-            <button class="btn-primary"   id="submitAddCustomer">Add Customer</button>
+        <div class="modal-handle"></div>
+        <div class="modal-title">New Customer</div>
+        <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" id="customerName" placeholder="e.g. Suresh Kumar">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea id="customerNotes" placeholder="Optional"></textarea>
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary"   id="submitAddCustomer">Add</button>
             <button class="btn-secondary" id="closeAddModal">Cancel</button>
         </div>
     </div>
 </div>
+
 <div id="editCustomerModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-title">Edit Customer</div>
-        <div class="form-group"><label class="form-label">Customer Name *</label><input type="text" id="editCustomerName"></div>
-        <div class="form-group"><label class="form-label">Notes</label><textarea id="editCustomerNotes"></textarea></div>
-        <div class="modal-buttons">
-            <button class="btn-primary"   id="submitEditCustomer">Save Changes</button>
+        <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" id="editCustomerName">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea id="editCustomerNotes"></textarea>
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary"   id="submitEditCustomer">Save</button>
             <button class="btn-secondary" id="closeEditModal">Cancel</button>
         </div>
     </div>
 </div>
+
 <div id="voiceModal" class="modal">
     <div class="modal-content">
-        <div class="modal-title">🎤 Voice Entry</div>
+        <div class="modal-handle"></div>
+        <div class="modal-title">Voice Entry</div>
         <div id="voiceContent"></div>
     </div>
 </div>
+
 <div id="confirmModal" class="modal">
     <div class="modal-content">
+        <div class="modal-handle"></div>
         <div class="modal-title" id="confirmTitle"></div>
-        <p id="confirmMessage" style="margin-bottom:28px;color:#6b7280;font-size:18px;font-weight:600"></p>
-        <div class="modal-buttons">
-            <button id="confirmYes"                style="font-size:18px;padding:18px">Yes</button>
-            <button class="btn-secondary" id="confirmNo" style="font-size:18px;padding:18px">Cancel</button>
+        <p id="confirmMessage" style="color:#6e6e73;font-size:16px;margin-bottom:24px"></p>
+        <div class="modal-btns">
+            <button id="confirmYes">Yes</button>
+            <button class="btn-secondary" id="confirmNo">Cancel</button>
         </div>
     </div>
 </div>
@@ -291,10 +369,8 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 <script>
-// ── CONFIG ───────────────────────────────────────────────────────────────────
-var CORRECT_PIN = '4321';   // ← only this PIN works
+var CORRECT_PIN = '4321';
 
-// ── FIREBASE INIT ────────────────────────────────────────────────────────────
 firebase.initializeApp({
     apiKey:            "AIzaSyDaQPed0WWrMEAnk4au7eGWWClw3OmbF5I",
     authDomain:        "kirana-389ab.firebaseapp.com",
@@ -306,386 +382,311 @@ firebase.initializeApp({
 });
 var db = firebase.database();
 
-// ── STATE ────────────────────────────────────────────────────────────────────
-var shopPath          = null;
-var unsubscribers     = [];
-var _customers        = {};
-var _transactions     = {};
-var currentCustomerId = null;
+var shopPath = null, unsubscribers = [], _customers = {}, _transactions = {}, currentCustomerId = null;
 
-// ── PIN LOGIN ────────────────────────────────────────────────────────────────
+// ── PIN ──────────────────────────────────────────────────────────────────────
 document.getElementById('pinEnterBtn').addEventListener('click', attemptLogin);
-document.getElementById('pinInput').addEventListener('keyup', function(e) {
-    if (e.key === 'Enter') attemptLogin();
-});
+document.getElementById('pinInput').addEventListener('keyup', function(e){ if(e.key==='Enter') attemptLogin(); });
 
-function attemptLogin() {
+function attemptLogin(){
     var pin = document.getElementById('pinInput').value.trim();
     document.getElementById('pinErrorMsg').textContent = '';
-
-    if (pin.length < 4) { showPinError('PIN must be at least 4 digits'); return; }
-
-    // ── HARDCODED PIN CHECK ──
-    if (pin !== CORRECT_PIN) {
-        showPinError('Wrong PIN. Please try again.');
-        document.getElementById('pinInput').value = '';
-        return;
-    }
-
+    if(pin.length < 4){ showPinError('PIN must be at least 4 digits'); return; }
+    if(pin !== CORRECT_PIN){ showPinError('Wrong PIN — please try again'); document.getElementById('pinInput').value=''; return; }
     var btn = document.getElementById('pinEnterBtn');
-    btn.disabled  = true;
-    btn.innerHTML = '<span class="spinner"></span> Opening…';
-
-    db.ref('shops/' + pin + '/meta').once('value').then(function(snap) {
-        if (!snap.exists()) {
-            return db.ref('shops/' + pin + '/meta').set({ created: new Date().toISOString() });
-        }
-    }).then(function() {
-        sessionStorage.setItem('kirana_pin', pin);
-        enterApp(pin);
-    }).catch(function(err) {
-        showPinError('Cannot connect. Check internet.');
-        console.error(err);
-        btn.disabled  = false;
-        btn.innerHTML = 'Enter Shop';
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Opening…';
+    db.ref('shops/'+pin+'/meta').once('value').then(function(s){
+        if(!s.exists()) return db.ref('shops/'+pin+'/meta').set({created: new Date().toISOString()});
+    }).then(function(){
+        sessionStorage.setItem('kirana_pin', pin); enterApp(pin);
+    }).catch(function(e){
+        showPinError('Cannot connect — check internet'); console.error(e);
+        btn.disabled=false; btn.innerHTML='Open Shop';
     });
 }
-
-function showPinError(msg) {
+function showPinError(msg){
     document.getElementById('pinErrorMsg').textContent = msg;
-    var input = document.getElementById('pinInput');
-    input.classList.add('pin-error');
-    setTimeout(function() { input.classList.remove('pin-error'); }, 500);
-    var btn = document.getElementById('pinEnterBtn');
-    btn.disabled  = false;
-    btn.innerHTML = 'Enter Shop';
+    var i = document.getElementById('pinInput');
+    i.classList.add('pin-error'); setTimeout(function(){ i.classList.remove('pin-error'); }, 400);
+    var btn = document.getElementById('pinEnterBtn'); btn.disabled=false; btn.innerHTML='Open Shop';
 }
 
 // ── APP ENTRY / EXIT ─────────────────────────────────────────────────────────
-function enterApp(pin) {
-    shopPath = 'shops/' + pin;
+function enterApp(pin){
+    shopPath = 'shops/'+pin;
     document.getElementById('pinScreen').style.display  = 'none';
     document.getElementById('appWrapper').style.display = 'block';
     subscribeToFirebase();
 }
-
-function logout() {
-    unsubscribers.forEach(function(fn) { fn(); });
-    unsubscribers = [];
-    _customers = {}; _transactions = {};
-    shopPath = null; currentCustomerId = null;
+function logout(){
+    unsubscribers.forEach(function(fn){ fn(); }); unsubscribers=[];
+    _customers={}; _transactions={}; shopPath=null; currentCustomerId=null;
     sessionStorage.removeItem('kirana_pin');
-    document.getElementById('appWrapper').style.display = 'none';
-    document.getElementById('pinScreen').style.display  = 'flex';
-    document.getElementById('pinInput').value           = '';
-    document.getElementById('pinErrorMsg').textContent  = '';
-    document.getElementById('pinEnterBtn').innerHTML    = 'Enter Shop';
-    document.getElementById('pinEnterBtn').disabled     = false;
+    document.getElementById('appWrapper').style.display='none';
+    document.getElementById('pinScreen').style.display='flex';
+    document.getElementById('pinInput').value='';
+    document.getElementById('pinErrorMsg').textContent='';
+    document.getElementById('pinEnterBtn').innerHTML='Open Shop';
+    document.getElementById('pinEnterBtn').disabled=false;
 }
 
-// ── REALTIME SYNC ─────────────────────────────────────────────────────────────
-function subscribeToFirebase() {
-    var syncDot = document.getElementById('syncDot');
-    syncDot.className = 'sync-dot syncing';
+// ── SYNC ─────────────────────────────────────────────────────────────────────
+function subscribeToFirebase(){
+    var dot = document.getElementById('syncDot'); dot.className='sync-dot syncing';
+    var cr = db.ref(shopPath+'/customers');
+    cr.on('value', function(s){ _customers=s.val()||{}; dot.className='sync-dot'; refresh(); }, function(){ dot.className='sync-dot offline'; });
+    var tr = db.ref(shopPath+'/transactions');
+    tr.on('value', function(s){ _transactions=s.val()||{}; refresh(); });
+    unsubscribers.push(function(){ cr.off(); }); unsubscribers.push(function(){ tr.off(); });
+}
+function refresh(){ currentCustomerId ? renderDetail() : renderDashboard(); }
 
-    var custRef = db.ref(shopPath + '/customers');
-    custRef.on('value', function(snap) {
-        _customers = snap.val() || {};
-        syncDot.className = 'sync-dot';
-        currentCustomerId ? renderDetail() : renderDashboard();
-    }, function() { syncDot.className = 'sync-dot offline'; });
-
-    var txRef = db.ref(shopPath + '/transactions');
-    txRef.on('value', function(snap) {
-        _transactions = snap.val() || {};
-        currentCustomerId ? renderDetail() : renderDashboard();
+// ── DATA HELPERS ─────────────────────────────────────────────────────────────
+function getCustomers(){ return Object.values(_customers); }
+function getTransactions(){ return Object.values(_transactions); }
+function getBalance(cid){
+    var d=0, p=0;
+    getTransactions().filter(function(t){ return t.customer_id===cid; }).forEach(function(t){
+        if(t.type==='debit') d+=t.amount; else p+=t.amount;
     });
-
-    unsubscribers.push(function() { custRef.off(); });
-    unsubscribers.push(function() { txRef.off(); });
+    return {totalDebit:d, totalPayment:p, balance:d-p};
 }
-
-// ── DATA ──────────────────────────────────────────────────────────────────────
-function getCustomers()    { return Object.values(_customers); }
-function getTransactions() { return Object.values(_transactions); }
-
-function getBalance(customerId) {
-    var totalDebit = 0, totalPayment = 0;
-    getTransactions().filter(function(t) { return t.customer_id === customerId; }).forEach(function(t) {
-        if (t.type === 'debit')   totalDebit   += t.amount;
-        if (t.type === 'payment') totalPayment += t.amount;
-    });
-    return { totalDebit: totalDebit, totalPayment: totalPayment, balance: totalDebit - totalPayment };
+function getTx(cid){
+    return getTransactions().filter(function(t){ return t.customer_id===cid; })
+        .sort(function(a,b){ return new Date(b.date)-new Date(a.date); });
 }
-
-function getCustomerTx(customerId) {
-    return getTransactions()
-        .filter(function(t) { return t.customer_id === customerId; })
-        .sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
-}
-
-function findCustKey(id) {
-    var entries = Object.entries(_customers);
-    for (var i = 0; i < entries.length; i++) {
-        if (entries[i][1].id === id) return entries[i][0];
-    }
+function findCustKey(id){
+    for(var e of Object.entries(_customers)) if(e[1].id===id) return e[0];
     return null;
 }
-
-function addCustomer(name, notes, callback) {
-    var c = { id: Date.now(), name: name.trim(), notes: notes.trim(), status: 'active', created_at: new Date().toISOString() };
-    db.ref(shopPath + '/customers').push(c).then(function() { if (callback) callback(c); });
+function addCustomer(name,notes,cb){
+    var c={id:Date.now(),name:name.trim(),notes:(notes||'').trim(),status:'active',created_at:new Date().toISOString()};
+    db.ref(shopPath+'/customers').push(c).then(function(){ if(cb) cb(c); });
     return c;
 }
-
-function updateCustomer(id, name, notes) {
-    var key = findCustKey(id);
-    if (key) db.ref(shopPath + '/customers/' + key).update({ name: name.trim(), notes: notes.trim() });
+function updateCustomer(id,name,notes){
+    var k=findCustKey(id); if(k) db.ref(shopPath+'/customers/'+k).update({name:name.trim(),notes:(notes||'').trim()});
+}
+function archiveCustomer(id){
+    var k=findCustKey(id); if(k) db.ref(shopPath+'/customers/'+k).update({status:'archived'});
+}
+function deleteCustomer(id){
+    var k=findCustKey(id); if(k) db.ref(shopPath+'/customers/'+k).remove();
+    Object.entries(_transactions).forEach(function(e){ if(e[1].customer_id===id) db.ref(shopPath+'/transactions/'+e[0]).remove(); });
+}
+function addTransaction(cid,amount,type){
+    db.ref(shopPath+'/transactions').push({id:Date.now(),customer_id:cid,amount:parseFloat(amount),type:type,date:new Date().toISOString()});
+}
+function deleteTx(txId){
+    for(var e of Object.entries(_transactions)){ if(e[1].id===txId){ db.ref(shopPath+'/transactions/'+e[0]).remove(); break; } }
 }
 
-function archiveCustomer(id) {
-    var key = findCustKey(id);
-    if (key) db.ref(shopPath + '/customers/' + key).update({ status: 'archived' });
-}
-
-function deleteCustomer(id) {
-    var key = findCustKey(id);
-    if (key) db.ref(shopPath + '/customers/' + key).remove();
-    Object.entries(_transactions).forEach(function(entry) {
-        if (entry[1].customer_id === id) db.ref(shopPath + '/transactions/' + entry[0]).remove();
-    });
-}
-
-function addTransaction(customerId, amount, type) {
-    var tx = { id: Date.now(), customer_id: customerId, amount: parseFloat(amount), type: type, date: new Date().toISOString() };
-    db.ref(shopPath + '/transactions').push(tx);
-}
-
-function deleteTx(txId) {
-    var entries = Object.entries(_transactions);
-    for (var i = 0; i < entries.length; i++) {
-        if (entries[i][1].id === txId) { db.ref(shopPath + '/transactions/' + entries[i][0]).remove(); break; }
-    }
-}
-
-// ── RENDER DASHBOARD ──────────────────────────────────────────────────────────
-function renderDashboard() {
-    var customers = getCustomers().filter(function(c) { return c.status === 'active'; });
-    var container = document.getElementById('customersContainer');
-    if (customers.length === 0) {
-        container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:#6b7280;padding:60px 24px;font-size:20px;font-weight:600">No customers yet.<br>Tap ➕ Add Customer above.</p>';
+// ── RENDER DASHBOARD ─────────────────────────────────────────────────────────
+function renderDashboard(){
+    var list = getCustomers().filter(function(c){ return c.status==='active'; });
+    var con  = document.getElementById('customersContainer');
+    if(!list.length){
+        con.innerHTML='<p style="color:#aaa;text-align:center;padding:48px 0;font-size:16px">No customers yet — tap Add Customer above.</p>';
         return;
     }
-    container.innerHTML = customers.map(function(c) {
-        var bal = getBalance(c.id);
-        var cls = bal.balance > 0 ? 'balance-negative' : 'balance-positive';
-        return '<div class="customer-card" onclick="showDetail(' + c.id + ')">' +
-            '<div class="customer-name">' + c.name + '</div>' +
-            '<div class="customer-stats">' +
-            '<div class="stat-item"><span class="stat-label">Debit:</span><span class="stat-value">₹' + bal.totalDebit + '</span></div>' +
-            '<div class="stat-item"><span class="stat-label">Paid:</span><span class="stat-value">₹' + bal.totalPayment + '</span></div>' +
-            '<div class="stat-item balance-line"><span class="stat-label">Balance:</span><span class="stat-value ' + cls + '">₹' + bal.balance + '</span></div>' +
-            '</div></div>';
+    con.innerHTML = list.map(function(c){
+        var b=getBalance(c.id), cls=b.balance>0?'bal-negative':'bal-positive';
+        return '<div class="customer-card" onclick="showDetail('+c.id+')">'+
+            '<div class="customer-name">'+c.name+'</div>'+
+            '<div class="stat-row"><span class="stat-label">Debit</span><span class="stat-value">₹'+b.totalDebit+'</span></div>'+
+            '<div class="stat-row"><span class="stat-label">Paid</span><span class="stat-value">₹'+b.totalPayment+'</span></div>'+
+            '<div class="balance-row"><span class="bal-label">Balance</span><span class="'+cls+'">₹'+b.balance+'</span></div>'+
+            '</div>';
     }).join('');
 }
 
 // ── RENDER DETAIL ─────────────────────────────────────────────────────────────
-function renderDetail() {
-    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
-    if (!c) return;
+function renderDetail(){
+    var c=getCustomers().find(function(c){ return c.id===currentCustomerId; }); if(!c) return;
     document.getElementById('detailCustomerTitle').textContent = c.name;
-    document.getElementById('detailCustomerNotes').textContent = c.notes || '';
-    var bal  = getBalance(c.id);
-    var card = document.getElementById('detailBalanceCard');
-    card.className = bal.balance > 5000 ? 'balance-card warning' : 'balance-card';
-    card.innerHTML =
-        '<div class="balance-label">Current Balance</div>' +
-        '<div class="balance-amount">₹' + bal.balance + '</div>' +
-        '<div class="balance-breakdown">' +
-        '<div><div class="breakdown-label">Total Debit</div><div class="breakdown-value">₹' + bal.totalDebit + '</div></div>' +
-        '<div><div class="breakdown-label">Total Paid</div><div class="breakdown-value">₹' + bal.totalPayment + '</div></div>' +
+    document.getElementById('detailCustomerNotes').textContent = c.notes||'';
+    var b=getBalance(c.id), hero=document.getElementById('detailBalanceCard');
+    hero.className = b.balance>5000 ? 'balance-hero over' : 'balance-hero';
+    hero.innerHTML =
+        '<div class="bh-label">Outstanding Balance</div>'+
+        '<div class="bh-amount">₹'+b.balance+'</div>'+
+        '<div class="bh-split">'+
+        '<div><div class="bh-split-label">Total Debit</div><div class="bh-split-val">₹'+b.totalDebit+'</div></div>'+
+        '<div><div class="bh-split-label">Total Paid</div><div class="bh-split-val">₹'+b.totalPayment+'</div></div>'+
         '</div>';
-    var txs = getCustomerTx(c.id);
-    var con = document.getElementById('transactionsContainer');
-    if (txs.length === 0) { con.innerHTML = '<div class="empty-message">No transactions yet</div>'; return; }
-    con.innerHTML = txs.map(function(t) {
-        var date  = new Date(t.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-        var cls   = t.type === 'debit' ? 'transaction-debit' : 'transaction-payment';
-        var sign  = t.type === 'debit' ? '+' : '-';
-        var label = t.type === 'debit' ? 'Debit' : 'Payment';
-        return '<div class="transaction-item">' +
-            '<div><div class="transaction-date">' + date + '</div><div class="transaction-type">' + label + '</div></div>' +
-            '<div style="display:flex;align-items:center;gap:14px">' +
-            '<div class="transaction-amount ' + cls + '">' + sign + '₹' + t.amount + '</div>' +
-            '<button class="transaction-delete" onclick="confirmDeleteTx(' + t.id + ')">❌</button>' +
-            '</div></div>';
+    var txs=getTx(c.id), con=document.getElementById('transactionsContainer');
+    if(!txs.length){ con.innerHTML='<div class="empty-msg">No transactions yet</div>'; return; }
+    con.innerHTML=txs.map(function(t){
+        var d=new Date(t.date).toLocaleDateString('en-IN',{day:'2-digit',month:'short'});
+        var cls=t.type==='debit'?'tx-debit':'tx-payment';
+        var sign=t.type==='debit'?'+':'-';
+        return '<div class="tx-item">'+
+            '<div><div class="tx-date">'+d+'</div><div class="tx-type">'+(t.type==='debit'?'Debit':'Payment')+'</div></div>'+
+            '<div class="tx-right"><span class="tx-amount '+cls+'">'+sign+'₹'+t.amount+'</span>'+
+            '<button class="tx-del" onclick="confirmDeleteTx('+t.id+')">✕</button></div></div>';
     }).join('');
 }
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
-function showDetail(id) {
-    currentCustomerId = id;
-    document.getElementById('dashboardView').style.display = 'none';
+function showDetail(id){
+    currentCustomerId=id;
+    document.getElementById('dashboardView').style.display='none';
     document.getElementById('detailView').classList.add('active');
     renderDetail();
 }
-
-function showDashboard() {
-    currentCustomerId = null;
-    document.getElementById('dashboardView').style.display = 'block';
+function showDashboard(){
+    currentCustomerId=null;
+    document.getElementById('dashboardView').style.display='block';
     document.getElementById('detailView').classList.remove('active');
     renderDashboard();
 }
 
-// ── MODAL HELPERS ─────────────────────────────────────────────────────────────
-function showModal(id)  { document.getElementById(id).classList.add('active'); }
-function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-function showConfirm(title, msg, btnLabel, btnClass, onYes) {
-    document.getElementById('confirmTitle').textContent   = title;
-    document.getElementById('confirmMessage').textContent = msg;
-    var yes = document.getElementById('confirmYes');
-    yes.textContent = btnLabel;
-    yes.className   = btnClass;
-    yes.onclick     = onYes;
+// ── MODALS ────────────────────────────────────────────────────────────────────
+function showModal(id){ document.getElementById(id).classList.add('active'); }
+function closeModal(id){ document.getElementById(id).classList.remove('active'); }
+function showConfirm(title,msg,label,cls,onYes){
+    document.getElementById('confirmTitle').textContent=title;
+    document.getElementById('confirmMessage').textContent=msg;
+    var y=document.getElementById('confirmYes'); y.textContent=label; y.className=cls; y.onclick=onYes;
     showModal('confirmModal');
 }
 
-// ── EVENT LISTENERS ───────────────────────────────────────────────────────────
+// ── EVENTS ────────────────────────────────────────────────────────────────────
 document.getElementById('logoutBtn').addEventListener('click', logout);
 document.getElementById('backBtn').addEventListener('click', showDashboard);
-document.getElementById('confirmNo').addEventListener('click', function() { closeModal('confirmModal'); });
+document.getElementById('confirmNo').addEventListener('click', function(){ closeModal('confirmModal'); });
 
-document.getElementById('addCustomerBtn').addEventListener('click', function() {
-    document.getElementById('customerName').value  = '';
-    document.getElementById('customerNotes').value = '';
-    showModal('addCustomerModal');
-    setTimeout(function() { document.getElementById('customerName').focus(); }, 100);
+document.getElementById('addCustomerBtn').addEventListener('click', function(){
+    document.getElementById('customerName').value=''; document.getElementById('customerNotes').value='';
+    showModal('addCustomerModal'); setTimeout(function(){ document.getElementById('customerName').focus(); },120);
 });
-document.getElementById('closeAddModal').addEventListener('click', function() { closeModal('addCustomerModal'); });
-document.getElementById('submitAddCustomer').addEventListener('click', function() {
-    var name = document.getElementById('customerName').value.trim();
-    if (!name) { alert('Please enter customer name'); return; }
-    addCustomer(name, document.getElementById('customerNotes').value);
+document.getElementById('closeAddModal').addEventListener('click', function(){ closeModal('addCustomerModal'); });
+document.getElementById('submitAddCustomer').addEventListener('click', function(){
+    var n=document.getElementById('customerName').value.trim();
+    if(!n){ alert('Please enter a name'); return; }
+    addCustomer(n, document.getElementById('customerNotes').value);
     closeModal('addCustomerModal');
 });
 
-document.getElementById('editCustomerBtn').addEventListener('click', function() {
-    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
-    document.getElementById('editCustomerName').value  = c.name;
-    document.getElementById('editCustomerNotes').value = c.notes || '';
+document.getElementById('editCustomerBtn').addEventListener('click', function(){
+    var c=getCustomers().find(function(c){ return c.id===currentCustomerId; });
+    document.getElementById('editCustomerName').value=c.name;
+    document.getElementById('editCustomerNotes').value=c.notes||'';
     showModal('editCustomerModal');
 });
-document.getElementById('closeEditModal').addEventListener('click', function() { closeModal('editCustomerModal'); });
-document.getElementById('submitEditCustomer').addEventListener('click', function() {
-    var name = document.getElementById('editCustomerName').value.trim();
-    if (!name) { alert('Name cannot be empty'); return; }
-    updateCustomer(currentCustomerId, name, document.getElementById('editCustomerNotes').value);
+document.getElementById('closeEditModal').addEventListener('click', function(){ closeModal('editCustomerModal'); });
+document.getElementById('submitEditCustomer').addEventListener('click', function(){
+    var n=document.getElementById('editCustomerName').value.trim();
+    if(!n){ alert('Name cannot be empty'); return; }
+    updateCustomer(currentCustomerId, n, document.getElementById('editCustomerNotes').value);
     closeModal('editCustomerModal');
 });
 
-document.getElementById('savePaymentBtn').addEventListener('click', function() {
-    var amount = parseFloat(document.getElementById('paymentAmount').value);
-    if (isNaN(amount) || amount <= 0) { alert('Enter a valid amount'); return; }
-    var bal = getBalance(currentCustomerId);
-    if (amount > bal.balance) { alert('Cannot exceed outstanding balance of ₹' + bal.balance); return; }
-    addTransaction(currentCustomerId, amount, 'payment');
-    document.getElementById('paymentAmount').value = '';
+document.getElementById('savePaymentBtn').addEventListener('click', function(){
+    var amt=parseFloat(document.getElementById('paymentAmount').value);
+    if(isNaN(amt)||amt<=0){ alert('Enter a valid amount'); return; }
+    var b=getBalance(currentCustomerId);
+    if(amt>b.balance){ alert('Cannot exceed balance of ₹'+b.balance); return; }
+    addTransaction(currentCustomerId, amt, 'payment');
+    document.getElementById('paymentAmount').value='';
 });
 
-document.getElementById('archiveBtn').addEventListener('click', function() {
-    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
-    showConfirm('Archive Customer?', c.name + ' will be hidden from dashboard.', 'Archive', 'btn-warning', function() {
-        archiveCustomer(currentCustomerId);
-        closeModal('confirmModal');
-        showDashboard();
+document.getElementById('archiveBtn').addEventListener('click', function(){
+    var c=getCustomers().find(function(c){ return c.id===currentCustomerId; });
+    showConfirm('Archive customer?', c.name+' will be hidden from the dashboard.', 'Archive','btn-warning', function(){
+        archiveCustomer(currentCustomerId); closeModal('confirmModal'); showDashboard();
     });
 });
-
-document.getElementById('deleteBtn').addEventListener('click', function() {
-    var c = getCustomers().find(function(c) { return c.id === currentCustomerId; });
-    showConfirm('Delete Customer?', 'Delete ' + c.name + ' and all transactions? Cannot be undone.', 'Delete', 'btn-danger', function() {
-        deleteCustomer(currentCustomerId);
-        closeModal('confirmModal');
-        showDashboard();
+document.getElementById('deleteBtn').addEventListener('click', function(){
+    var c=getCustomers().find(function(c){ return c.id===currentCustomerId; });
+    showConfirm('Delete customer?', 'All transactions for '+c.name+' will be removed. This cannot be undone.', 'Delete','btn-danger', function(){
+        deleteCustomer(currentCustomerId); closeModal('confirmModal'); showDashboard();
     });
 });
-
-function confirmDeleteTx(txId) {
-    showConfirm('Delete Transaction?', 'Are you sure?', 'Delete', 'btn-danger', function() {
-        deleteTx(txId);
-        closeModal('confirmModal');
+function confirmDeleteTx(txId){
+    showConfirm('Delete transaction?','This cannot be undone.','Delete','btn-danger',function(){
+        deleteTx(txId); closeModal('confirmModal');
     });
 }
 
 // ── VOICE ─────────────────────────────────────────────────────────────────────
-document.getElementById('voiceBtn').addEventListener('click', function() {
-    document.getElementById('voiceContent').innerHTML =
-        '<div class="voice-hint">Say: "Customer Name Amount" — e.g. "Ramesh 100"</div>' +
-        '<div class="form-group"><label class="form-label">Or type here:</label>' +
-        '<input type="text" id="voiceInput" placeholder="e.g. Ramesh 100" style="font-size:20px;padding:16px"></div>' +
-        '<div id="voiceStatus"></div><div id="voiceParsed"></div>' +
-        '<div class="modal-buttons">' +
-        '<button class="btn-primary"   id="parseBtn"        style="font-size:18px;padding:18px">Parse</button>' +
-        '<button class="btn-secondary" id="closeVoiceModal" style="font-size:18px;padding:18px">Cancel</button></div>';
-    showModal('voiceModal');
-    document.getElementById('closeVoiceModal').addEventListener('click', function() { closeModal('voiceModal'); });
-    document.getElementById('parseBtn').addEventListener('click', parseVoice);
-    document.getElementById('voiceInput').addEventListener('keyup', function(e) { if (e.key === 'Enter') parseVoice(); });
-    startVoice();
-});
+document.getElementById('voiceBtn').addEventListener('click', openVoice);
 
-function startVoice() {
+function openVoice(){
+    document.getElementById('voiceContent').innerHTML =
+        '<div class="voice-tip">Say a name then an amount — e.g. <strong>"Ramesh 150"</strong></div>'+
+        '<div class="voice-status" id="voiceStatus"></div>'+
+        '<div class="form-group">'+
+        '<label class="form-label">Or type</label>'+
+        '<input type="text" id="voiceInput" placeholder="Ramesh 150" style="font-size:18px">'+
+        '</div>'+
+        '<div id="voiceParsed"></div>'+
+        '<div class="modal-btns">'+
+        '<button class="btn-primary" id="parseBtn" style="font-size:17px;padding:16px">Parse</button>'+
+        '<button class="btn-secondary" id="closeVoiceBtn" style="font-size:17px;padding:16px">Cancel</button>'+
+        '</div>';
+    showModal('voiceModal');
+    document.getElementById('closeVoiceBtn').onclick = function(){ closeModal('voiceModal'); };
+    document.getElementById('parseBtn').onclick = parseVoice;
+    document.getElementById('voiceInput').addEventListener('keyup', function(e){ if(e.key==='Enter') parseVoice(); });
+    startVoice();
+}
+
+function startVoice(){
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { document.getElementById('voiceStatus').innerHTML = '<p style="color:#dc2626;font-size:17px;font-weight:600">Voice not supported in this browser</p>'; return; }
-    var r = new SR();
-    r.language = 'en-IN'; r.continuous = false; r.interimResults = false;
-    document.getElementById('voiceStatus').innerHTML = '<p style="color:#2563eb;font-size:18px;font-weight:700"><span class="listening-indicator"></span>Listening…</p>';
-    r.onresult = function(e) {
-        var t = '';
-        for (var i = e.resultIndex; i < e.results.length; i++) t += e.results[i][0].transcript;
-        document.getElementById('voiceInput').value = t.trim();
-        document.getElementById('voiceStatus').innerHTML = '';
-        parseVoice();
+    var st = document.getElementById('voiceStatus');
+    if(!SR){ st.innerHTML='<span style="color:#dc2626">Voice not supported in this browser</span>'; return; }
+    var r=new SR(); r.language='en-IN'; r.continuous=false; r.interimResults=false;
+    st.innerHTML='<span class="mic-pulse"></span> Listening…';
+    r.onresult=function(e){
+        var t=''; for(var i=e.resultIndex;i<e.results.length;i++) t+=e.results[i][0].transcript;
+        document.getElementById('voiceInput').value=t.trim();
+        st.innerHTML=''; parseVoice();
     };
-    r.onerror = function(e) { document.getElementById('voiceStatus').innerHTML = '<p style="color:#dc2626;font-size:17px;font-weight:600">Error: ' + e.error + '</p>'; };
+    r.onerror=function(e){ st.innerHTML='<span style="color:#dc2626">'+e.error+'</span>'; };
     r.start();
 }
 
-function parseVoice() {
-    var input = document.getElementById('voiceInput').value.trim();
-    var parts = input.split(/\s+/);
-    var errEl = document.getElementById('voiceParsed');
-    if (parts.length < 2) { errEl.innerHTML = '<p style="color:#dc2626;padding:14px;background:#fee2e2;border-radius:10px;margin-top:16px;font-size:17px;font-weight:600">Say name then amount — e.g. "Ramesh 100"</p>'; return; }
-    var amount = parseFloat(parts[parts.length - 1]);
-    var name   = parts.slice(0, -1).join(' ');
-    if (isNaN(amount) || amount <= 0) { errEl.innerHTML = '<p style="color:#dc2626;padding:14px;background:#fee2e2;border-radius:10px;margin-top:16px;font-size:17px;font-weight:600">Amount must be a number</p>'; return; }
-    errEl.innerHTML = '<div class="parsed-result"><div style="font-size:15px;color:#6b7280;font-weight:600">Confirm transaction:</div>' +
-        '<div class="parsed-content"><div class="parsed-name">' + name + '</div><div class="parsed-amount">₹' + amount + '</div></div></div>';
-    var btn = document.getElementById('parseBtn');
-    btn.textContent = 'Confirm ✓';
-    btn.className   = 'btn-success';
-    btn.onclick     = function() {
-        var existing = getCustomers().find(function(c) { return c.name.toLowerCase() === name.toLowerCase(); });
-        if (existing) {
+function parseVoice(){
+    var raw=document.getElementById('voiceInput').value.trim();
+    var parts=raw.split(/\s+/);
+    var out=document.getElementById('voiceParsed');
+    if(parts.length<2){ out.innerHTML='<p style="color:#dc2626;font-size:14px;margin-top:10px">Say name then amount, e.g. "Ramesh 150"</p>'; return; }
+    var amount=parseFloat(parts[parts.length-1]);
+    var name=parts.slice(0,-1).join(' ');
+    if(isNaN(amount)||amount<=0){ out.innerHTML='<p style="color:#dc2626;font-size:14px;margin-top:10px">Last word must be a number</p>'; return; }
+
+    out.innerHTML='<div class="parsed-box"><div class="parsed-name-text">'+name+'</div><div class="parsed-amt-text">₹'+amount+'</div></div>';
+
+    var btn=document.getElementById('parseBtn');
+    btn.textContent='Confirm'; btn.className='btn-success';
+    btn.onclick=function(){
+        var existing=getCustomers().find(function(c){ return c.name.toLowerCase()===name.toLowerCase(); });
+        if(existing){
+            // ── no second confirm, just save and close ──
             addTransaction(existing.id, amount, 'debit');
             closeModal('voiceModal');
-            alert('✓ Added ₹' + amount + ' debit for ' + name);
         } else {
-            if (confirm('"' + name + '" doesn\'t exist. Create new customer?')) {
-                addCustomer(name, '', function(c) {
-                    addTransaction(c.id, amount, 'debit');
-                    closeModal('voiceModal');
-                    alert('✓ Added ₹' + amount + ' debit for ' + name);
-                });
-            }
+            // ── new customer: one confirm only ──
+            showConfirm(
+                'New customer?',
+                '"'+name+'" is not in your list. Add them and record ₹'+amount+' debit?',
+                'Add & Save', 'btn-primary',
+                function(){
+                    closeModal('confirmModal');
+                    addCustomer(name,'',function(c){
+                        addTransaction(c.id, amount, 'debit');
+                        closeModal('voiceModal');
+                    });
+                }
+            );
         }
     };
 }
 
 // ── AUTO LOGIN ────────────────────────────────────────────────────────────────
-var saved = sessionStorage.getItem('kirana_pin');
-if (saved && saved === CORRECT_PIN) { enterApp(saved); }
+var _saved=sessionStorage.getItem('kirana_pin');
+if(_saved && _saved===CORRECT_PIN) enterApp(_saved);
 </script>
 </body>
 </html>
